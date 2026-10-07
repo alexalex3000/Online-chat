@@ -1,0 +1,55 @@
+.link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  user-select: none;
+  transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.15s ease;
+
+  &:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  &:active {
+    transform: scale(0.985);
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 3px;
+    height: 18px;
+    border-radius: 0 4px 4px 0;
+    background-color: var(--accent-primary);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.selected {
+  background-color: var(--accent-active-item);
+  color: var(--text-primary);
+
+  &::before {
+    transform: translateY(-50%) scaleY(1);
+  }
+
+  &:hover {
+    background-color: var(--accent-active-item);
+  }
+}

@@ -7,8 +7,8 @@
     "build": "tsc",
     "dev:front": "npm run dev --prefix client"
   },
-  "dependencies": {},
   "devDependencies": {
+    "sass": "^1.105.1",
     "typescript": "^5.5.3"
   },
   "private": true

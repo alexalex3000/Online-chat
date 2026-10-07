@@ -1,0 +1,13 @@
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  background-color: var(--bg-sidebar, #111923);
+  border-right: 1px solid var(--border-subtle, #1c2735);
+  box-sizing: border-box;
+  padding: 20px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: space-between;
+}

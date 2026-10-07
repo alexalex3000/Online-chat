@@ -1,0 +1,10 @@
+.username {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-muted, #7e8b9b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

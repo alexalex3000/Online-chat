@@ -5,6 +5,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`h-full antialiased`}
+      data-theme="dark"
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">{children}</body>
     </html>

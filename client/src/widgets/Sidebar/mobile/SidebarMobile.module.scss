@@ -1,0 +1,50 @@
+.bottomNav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background-color: var(--bg-sidebar, #111923);
+  border-top: 1px solid var(--border-subtle, #1c2735);
+  padding: 0 16px;
+  box-sizing: border-box;
+  z-index: 50;
+
+  align-items: center;
+  justify-content: space-around;
+
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-secondary, #7e8b9b);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: color 0.2s ease;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  &:hover {
+    color: var(--text-primary, #ffffff);
+  }
+}
+
+.active {
+  color: var(--accent-primary, #5294e2);
+}

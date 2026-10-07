@@ -1,0 +1,38 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: var(--status-online);
+  flex-shrink: 0;
+}
+
+.separator {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: var(--text-muted);
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.text {
+  margin: 0;
+  white-space: nowrap;
+}

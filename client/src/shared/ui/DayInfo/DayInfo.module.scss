@@ -1,0 +1,18 @@
+.dayInfo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  user-select: none;
+
+  background-color: var(--chat-system-pill);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}

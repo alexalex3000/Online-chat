@@ -1,9 +1,303 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+:root,
+[data-theme="dark"] {
+  --bg-sidebar: #0b1118;
+  --bg-main: #0e1622;
+  --bg-card: #152232;
+  --bg-input: #0f1a26;
+  --bg-hover: rgba(255, 255, 255, 0.05);
+
+  --chat-bubble-incoming: #172433;
+  --chat-bubble-outgoing: #1f476b;
+  --chat-pinned-bg: #142232;
+  --chat-system-pill: rgba(255, 255, 255, 0.07);
+
+  --accent-primary: #5294e2;
+  --accent-primary-hover: #4182cf;
+  --accent-active-item: #192e45;
+  --accent-badge: #1f3d5c;
+  --accent-badge-text: #64b5f6;
+  --toggle-active: #5294e2;
+  --toggle-inactive: #243547;
+  --status-online: #34c759;
+
+  --text-primary: #f5f7fa;
+  --text-secondary: #9aaec4;
+  --text-muted: #5e738a;
+  --text-accent: #64b5f6;
+
+  --border-subtle: #24384d;
+  --border-focus: #5294e2;
+
+  --slider-track: #203144;
+  --slider-fill: #5294e2;
+  --scrollbar-thumb: #233547;
+}
+
+[data-theme="gray"] {
+  --bg-sidebar: #18191c;
+  --bg-main: #1f2024;
+  --bg-card: #282a2e;
+  --bg-input: #1e1f23;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+
+  --chat-bubble-incoming: #2c2e33;
+  --chat-bubble-outgoing: #39424e;
+  --chat-pinned-bg: #26282d;
+  --chat-system-pill: rgba(255, 255, 255, 0.09);
+
+  --accent-primary: #6c8ca6;
+  --accent-primary-hover: #5d7c95;
+  --accent-active-item: #2f343b;
+  --accent-badge: #343b44;
+  --accent-badge-text: #96afc4;
+  --toggle-active: #6c8ca6;
+  --toggle-inactive: #3a3d44;
+  --status-online: #48bb78;
+
+  --text-primary: #f0f2f5;
+  --text-secondary: #a0a6b1;
+  --text-muted: #6f7480;
+  --text-accent: #8ea8be;
+
+  --border-subtle: #3f434a;
+  --border-focus: #6c8ca6;
+
+  --slider-track: #35383f;
+  --slider-fill: #6c8ca6;
+  --scrollbar-thumb: #3b3f46;
+}
+
+[data-theme="light"] {
+  --bg-sidebar: #f0f4f9;
+  --bg-main: #ffffff;
+  --bg-card: #f7f9fc;
+  --bg-input: #edf2f7;
+  --bg-hover: rgba(0, 0, 0, 0.04);
+
+  --chat-bubble-incoming: #eef2f6;
+  --chat-bubble-outgoing: #d4e7fc;
+  --chat-pinned-bg: #eaf1fa;
+  --chat-system-pill: rgba(0, 0, 0, 0.06);
+
+  --accent-primary: #2979ff;
+  --accent-primary-hover: #1c68e3;
+  --accent-active-item: #dce9f8;
+  --accent-badge: #d8e6f8;
+  --accent-badge-text: #1967d2;
+  --toggle-active: #2979ff;
+  --toggle-inactive: #cfd8dc;
+  --status-online: #22c55e;
+
+  --text-primary: #17212b;
+  --text-secondary: #5d6f84;
+  --text-muted: #8d9ba8;
+  --text-accent: #1976d2;
+
+  --border-subtle: #d0d7de;
+  --border-focus: #2979ff;
+
+  --slider-track: #e2e8f0;
+  --slider-fill: #2979ff;
+  --scrollbar-thumb: #cbd5e1;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--accent-primary);
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::selection {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input::-ms-clear,
+input::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  --color-sidebar: var(--bg-sidebar);
+  --color-main: var(--bg-main);
+  --color-card: var(--bg-card);
+  --color-input: var(--bg-input);
+  --color-hover: var(--bg-hover);
+
+  --color-chat-incoming: var(--chat-bubble-incoming);
+  --color-chat-outgoing: var(--chat-bubble-outgoing);
+  --color-chat-pinned: var(--chat-pinned-bg);
+  --color-chat-system: var(--chat-system-pill);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-hover: var(--accent-primary-hover);
+  --color-accent-active: var(--accent-active-item);
+  --color-accent-badge: var(--accent-badge);
+  --color-accent-badge-text: var(--accent-badge-text);
+
+  --color-toggle-active: var(--toggle-active);
+  --color-toggle-inactive: var(--toggle-inactive);
+  --color-status-online: var(--status-online);
+
+  --color-txt-primary: var(--text-primary);
+  --color-txt-secondary: var(--text-secondary);
+  --color-txt-muted: var(--text-muted);
+  --color-txt-accent: var(--text-accent);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-focus: var(--border-focus);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
 }
 
 body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
 }
