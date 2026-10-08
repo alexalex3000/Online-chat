@@ -25,7 +25,6 @@ export default function Home() {
             <Input label={"text"} before={"@"}/>
             <NumOfMembers online={1321} total={412}/>
             <Section>safasfasfasf</Section>
-            <Switch isChecked={isChecked} setChecked={setChecked}/>
             <Textarea label={"safaf"}/>
             <UnwrapButton onClick={() => {}}>asfasf</UnwrapButton>
             <SidebarLink>
