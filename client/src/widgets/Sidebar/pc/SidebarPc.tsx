@@ -1,7 +1,7 @@
 import styles from "../Sidebar.module.scss"
 import Logo from "@/shared/ui/Logo/Logo";
 import SidebarLinks from "@/features/SidebarLinks/SidebarLinks";
-import UserLink from "@/features/UserLink/UserLink";
+import UserLink from "@/entities/user/ui/UserLink/UserLink";
 import Link from "next/link";
 
 export default function SidebarPc(){

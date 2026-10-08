@@ -1,3 +1,27 @@
+.containerLarge{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media(max-width: 574px) {
+    .userInfo{
+      gap: 6px;
+    }
+  }
+}
+
 .container {
   display: flex;
   align-items: center;

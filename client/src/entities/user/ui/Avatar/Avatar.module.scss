@@ -36,6 +36,31 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
+.large {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: var(--accent-primary, #3b82f6);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  user-select: none;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+@media(max-width: 574px){
+  .large{
+    width: 70px;
+    height: 70px;
+  }
+}
 
 .image {
   width: 100%;

@@ -3,13 +3,14 @@ import styles from "./Textarea.module.scss";
 
 interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     label?: string;
+    placeholder?: string;
     errorMessage?: string;
 }
 
 export default function Textarea({
                                      label,
                                      errorMessage,
-                                     className = "",
+                                     placeholder,
                                      id,
                                      ...props
                                  }: Props) {
@@ -25,7 +26,8 @@ export default function Textarea({
 
             <textarea
                 id={textareaId}
-                className={`${styles.textarea} ${errorMessage ? styles.error : ""} ${className}`}
+                placeholder={placeholder}
+                className={`${styles.textarea} ${errorMessage ? styles.error : ""}`}
                 {...props}
             />
 

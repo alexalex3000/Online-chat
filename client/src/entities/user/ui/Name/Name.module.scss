@@ -8,3 +8,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.large {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-primary, #ffffff);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media(max-width: 574px){
+  .large{
+    font-size: 18px;
+  }
+}

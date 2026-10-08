@@ -3,6 +3,10 @@
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   padding: 24px;
+
+  @media(max-width: 574px) {
+    padding: 16px;
+  }
 }
 
 .small{
