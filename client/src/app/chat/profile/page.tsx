@@ -1,5 +1,9 @@
+import OtherHeader from "@/widgets/header/OtherHeader/OtherHeader";
+
 export default function ProfilePage() {
     return (
-        <div></div>
+        <>
+            <OtherHeader text="Profile" showButton/>
+        </>
     )
 }

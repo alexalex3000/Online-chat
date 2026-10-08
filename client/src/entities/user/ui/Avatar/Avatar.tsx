@@ -4,13 +4,14 @@ import {getFirstLatters} from "@/shared/utils/getFirstLatters";
 export interface Props {
     url?: string
     name?: string
+    small?: boolean
 }
 
-export default function Avatar({ url, name = "Alexey Petrikevitch" }: Props) {
+export default function Avatar({ url, name = "Alexey Petrikevitch", small}: Props) {
     const firstLetters = getFirstLatters(name)
 
     return (
-        <div className={styles.avatar}>
+        <div className={small ? styles.small : styles.avatar}>
             {firstLetters}
             {
                 /*<Image

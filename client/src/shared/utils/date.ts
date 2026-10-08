@@ -16,3 +16,7 @@ const month = [
 export default function getDayStr(date: Date){
     return `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()}`
 }
+
+export function getTime(date: Date){
+    return `${date.getHours()}:${date.getMinutes()}`
+}

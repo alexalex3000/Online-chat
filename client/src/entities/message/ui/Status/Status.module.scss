@@ -1,0 +1,25 @@
+.statusIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex-shrink: 0;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.2;
+  }
+}
+
+.success {
+  color: #8ec3f8;
+}
+
+.pending {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.error {
+  color: #ef4444;
+}
