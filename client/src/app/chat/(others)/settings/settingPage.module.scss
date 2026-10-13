@@ -1,0 +1,20 @@
+.columns {
+  display: flex;
+  gap: 16px;
+
+  > div {
+    min-width: 0;
+    &:first-child { flex: 3 1 0; }
+    &:last-child  { flex: 2 1 0; }
+  }
+}
+
+@media(max-width: 574px){
+  .columns{
+    flex-direction: column;
+
+    & *{
+      flex-grow: 1
+    }
+  }
+}

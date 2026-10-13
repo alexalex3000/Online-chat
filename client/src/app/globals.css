@@ -300,3 +300,7 @@ input,
 textarea {
   font-family: inherit;
 }
+
+*{
+  font-family: var(--font-inter-condensed);
+}

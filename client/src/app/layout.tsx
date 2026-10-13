@@ -1,13 +1,23 @@
+import {Inter} from "next/font/google";
 import "./globals.css";
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
-    <html
-      lang="en"
-      className={`h-full antialiased`}
-      data-theme="light"
-    >
-      <body suppressHydrationWarning className="min-h-full flex flex-col">{children}</body>
-    </html>
-  );
+const inter = Inter({
+    subsets: ["latin"],
+    weight: ["400", "600", "700"],
+    variable: "--font-inter",
+    display: "swap",
+});
+
+export default function RootLayout({
+                                       children,
+                                   }: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="ru" data-theme="gray" className={inter.variable}>
+            <body className={inter.className}>
+                {children}
+            </body>
+        </html>
+    );
 }
