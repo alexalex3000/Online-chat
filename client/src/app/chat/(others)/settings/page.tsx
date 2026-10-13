@@ -2,6 +2,7 @@ import OtherHeader from "@/widgets/header/OtherHeader/OtherHeader";
 import ChatInterfaceSettings from "@/widgets/ChatInterfaceSettings/ChatInterfaceSettings";
 import styles from "../../page.module.scss"
 import settingStyles from "./settingPage.module.scss"
+import Notifications from "@/widgets/Notifications/Notifications";
 
 export default function SettingsPage() {
     return (
@@ -13,6 +14,7 @@ export default function SettingsPage() {
                         <ChatInterfaceSettings/>
                     </div>
                     <div>
+                        <Notifications/>
                     </div>
                 </div>
             </div>

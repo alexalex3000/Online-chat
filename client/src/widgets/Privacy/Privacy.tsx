@@ -6,12 +6,13 @@ import Section from "@/shared/ui/Section/Section";
 import Switch from "@/shared/ui/Switch/Switch";
 import styles from "./Privacy.module.scss";
 import {delay} from "@/entities/settigs/api/delay";
+import {Setting} from "@/entities/settigs/model/types";
 
 export default function Privacy() {
     const [showOnline, setShowOnline] = useState<boolean>(false);
     const [readReceipts, setReadReceipts] = useState<boolean>(false);
 
-    const privacy = [
+    const privacy:Setting[] = [
         {
             title: "Show Online Status",
             text: "Let members see when you’re active",
