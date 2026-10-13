@@ -4,6 +4,7 @@ import styles from "./ChangeTheme.module.scss"
 import Theme from "@/features/ChangeTheme/ui/Theme/Theme";
 import {useState} from "react";
 import {Check} from "lucide-react";
+import {cookies} from "next/headers";
 
 export type ThemeColor = "dark" | "gray" | "light";
 
@@ -33,6 +34,7 @@ export default function ChangeTheme() {
     const handleClick = (theme: ThemeColor) => {
         setTheme(theme);
         document.documentElement.dataset.theme = theme;
+        document.cookie = `theme=${theme}; path=/ max-age=3153600`;
     }
 
     return (

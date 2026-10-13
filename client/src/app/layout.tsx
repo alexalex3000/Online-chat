@@ -1,5 +1,6 @@
 import {Inter} from "next/font/google";
 import "./globals.css";
+import {cookies} from "next/headers";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -8,13 +9,16 @@ const inter = Inter({
     display: "swap",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
                                        children,
                                    }: {
     children: React.ReactNode;
 }) {
+    const cookiesStore = await cookies()
+    const theme = cookiesStore.get("theme") || "dark"
+
     return (
-        <html lang="ru" data-theme="dark" className={inter.variable}>
+        <html lang="ru" data-theme={theme} className={inter.variable}>
             <body className={inter.className}>
                 {children}
             </body>
