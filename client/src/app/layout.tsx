@@ -15,8 +15,8 @@ export default async function RootLayout({
     children: React.ReactNode;
 }) {
     const cookiesStore = await cookies()
-    const theme = cookiesStore.get("theme") || "dark"
-
+    const theme = cookiesStore.get("theme")?.value || "dark"
+    console.log(theme)
     return (
         <html lang="ru" data-theme={theme} className={inter.variable}>
             <body className={inter.className}>

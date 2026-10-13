@@ -26,6 +26,11 @@
   &:not(:last-child) {
     border-bottom: 1px solid var(--border-subtle, #24384d);
   }
+
+  > :last-child {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }
 
 .textGroup {

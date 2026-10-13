@@ -2,7 +2,6 @@
 
 import styles from "./Switch.module.scss"
 import {useOptimistic, useTransition} from "react";
-import {delay} from "@/entities/settigs/api/delay";
 
 interface Props{
     isChecked:boolean,

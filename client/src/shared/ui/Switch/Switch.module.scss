@@ -1,6 +1,7 @@
 .track {
   position: relative;
   width: 50px;
+  flex-shrink: 0;
   height: 24px;
   border-radius: 9999px;
   cursor: pointer;

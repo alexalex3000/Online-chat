@@ -4,7 +4,6 @@ import styles from "./ChangeTheme.module.scss"
 import Theme from "@/features/ChangeTheme/ui/Theme/Theme";
 import {useState} from "react";
 import {Check} from "lucide-react";
-import {cookies} from "next/headers";
 
 export type ThemeColor = "dark" | "gray" | "light";
 
@@ -13,8 +12,15 @@ interface Schema {
     action: () => void
 }
 
+function getCookie(name: string): ThemeColor | undefined {
+    if (typeof document === "undefined") return undefined;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    return parts.length === 2 ? parts.pop()?.split(";").shift() as ThemeColor : undefined;
+}
+
 export default function ChangeTheme() {
-    const [theme, setTheme] = useState<ThemeColor>("dark");
+    const [theme, setTheme] = useState<ThemeColor>(getCookie("theme") ?? "dark");
 
     const colorSchemas: Schema[] = [
         {
@@ -34,7 +40,7 @@ export default function ChangeTheme() {
     const handleClick = (theme: ThemeColor) => {
         setTheme(theme);
         document.documentElement.dataset.theme = theme;
-        document.cookie = `theme=${theme}; path=/ max-age=3153600`;
+        document.cookie = `theme=${theme}; path=/; max-age=3153600`;
     }
 
     return (
