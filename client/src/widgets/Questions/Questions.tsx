@@ -3,11 +3,7 @@
 import HelpSelect from "@/shared/ui/HelpSelect/HelpSelect";
 import Label from "@/shared/ui/Label/Label";
 import {useSearchParams} from "next/navigation";
-
-interface FAQItem {
-    question: string;
-    answer: string;
-}
+import {FAQItem} from "@/entities/question/model/types";
 
 const helpQuestionsRaw: FAQItem[] = [
     {

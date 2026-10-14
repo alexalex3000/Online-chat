@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-sizing: border-box;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.header {
+  flex-shrink: 0;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #5da0dc;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #7b94ad;
+  line-height: 1.35;
+}
+
+.actions {
+  flex: 1;
+  max-width: 580px;
+  display: flex;
+  justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sendIcon {
+  width: 15px;
+  height: 15px;
+}
