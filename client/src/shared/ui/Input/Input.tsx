@@ -10,6 +10,8 @@ interface Props{
     wrapperClassName?: string;
     id?: string;
     placeholder?: string;
+    name?: string;
+    disabled?: boolean;
 }
 
 export default function Input({
@@ -18,8 +20,10 @@ export default function Input({
                                   errorMessage,
                                   wrapperClassName = "",
                                   id,
+                                  name,
                                   onChange,
                                   placeholder,
+                                  disabled,
                                   ...props
                               }: Props) {
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
@@ -41,6 +45,8 @@ export default function Input({
 
                 <input
                     id={inputId}
+                    disabled={disabled}
+                    name={name}
                     onChange={(e) => onChange && onChange(e.target.value)}
                     placeholder={placeholder}
                     className={`${styles.input}`}
