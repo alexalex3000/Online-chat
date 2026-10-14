@@ -1,0 +1,42 @@
+.helpSelectContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 6px;
+}
+
+.questionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+}
+
+.question {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  line-height: 1.4;
+}
+
+.arrow {
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary, #6b8299);
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.rotated {
+    transform: rotate(90deg);
+  }
+}
+
+.answer {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary, #7d96af);
+  word-break: break-word;
+}
