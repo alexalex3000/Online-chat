@@ -1,8 +1,11 @@
+"use client"
+
 import styles from "./Input.module.scss";
 
 interface Props{
-    label: string;
-    before?: string;
+    label?: string;
+    before?: string | React.ReactNode;
+    onChange?: (value: string) => void;
     errorMessage?: string;
     wrapperClassName?: string;
     id?: string;
@@ -15,6 +18,7 @@ export default function Input({
                                   errorMessage,
                                   wrapperClassName = "",
                                   id,
+                                  onChange,
                                   placeholder,
                                   ...props
                               }: Props) {
@@ -37,6 +41,7 @@ export default function Input({
 
                 <input
                     id={inputId}
+                    onChange={(e) => onChange && onChange(e.target.value)}
                     placeholder={placeholder}
                     className={`${styles.input}`}
                     {...props}
