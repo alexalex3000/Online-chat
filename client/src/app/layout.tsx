@@ -1,27 +1,39 @@
-import {Inter} from "next/font/google";
-import "./globals.css";
-import {cookies} from "next/headers";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "@/app/globals.css";
 
 const inter = Inter({
-    subsets: ["latin"],
-    weight: ["400", "600", "700"],
+    subsets: ["latin", "cyrillic"],
     variable: "--font-inter",
-    display: "swap",
 });
 
-export default async function RootLayout({
+export const metadata: Metadata = {
+    title: "Echo Chat",
+};
+
+const themeScript = `
+  (function() {
+    try {
+      var match = document.cookie.match(new RegExp('(^| )theme=([^;]+)'));
+      var theme = match ? match[2] : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  })();
+`;
+
+export default function RootLayout({
                                        children,
                                    }: {
     children: React.ReactNode;
 }) {
-    const cookiesStore = await cookies()
-    const theme = cookiesStore.get("theme")?.value || "dark"
-    console.log(theme)
     return (
-        <html lang="ru" data-theme={theme} className={inter.variable}>
-            <body className={inter.className}>
-                {children}
-            </body>
+        <html lang="ru" data-theme="dark" className={inter.variable} suppressHydrationWarning>
+        <head>
+            <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        </head>
+        <body className={inter.className} suppressHydrationWarning>
+        {children}
+        </body>
         </html>
     );
 }

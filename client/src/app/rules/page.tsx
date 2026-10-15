@@ -9,12 +9,13 @@ import {useEffect, useState} from "react";
 export default function RulesPage() {
     const router = useRouter();
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth > 768);
+            setIsMobile(window.innerWidth < 768);
         }
+        setIsMobile(false);
 
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);

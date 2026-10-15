@@ -8,7 +8,7 @@ interface Props{
 }
 
 export default function Sidebar({mobile, pc}: Props){
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -21,6 +21,8 @@ export default function Sidebar({mobile, pc}: Props){
 
             setIsMobile(false);
         }
+
+        handleResize()
 
         window.addEventListener('resize', handleResize);
         return () => {

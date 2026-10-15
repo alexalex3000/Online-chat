@@ -46,8 +46,8 @@ export default function ChangeTheme() {
     return (
         <div className={styles.container}>
             {
-                colorSchemas.map((themeObj) => (
-                    <div onClick={() => handleClick(themeObj.color)} className={`${styles.changeThemeItem} ${themeObj.color === theme ? styles.selected : ""}`}>
+                colorSchemas.map((themeObj, index) => (
+                    <div key={index} onClick={() => handleClick(themeObj.color)} className={`${styles.changeThemeItem} ${themeObj.color === theme ? styles.selected : ""}`}>
                         <Theme theme={themeObj.color}/>
                         <p>{`${themeObj.color[0].toUpperCase()}${themeObj.color.slice(1)}`}</p>
                         {themeObj.color === theme && (
