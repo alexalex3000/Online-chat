@@ -37,7 +37,7 @@ export default function SidebarLinks() {
         },
         {
             text: "Community Rules",
-            link: "/chat/rules",
+            link: "/rules",
             icon: <ShieldCheck />
         }
     ]
