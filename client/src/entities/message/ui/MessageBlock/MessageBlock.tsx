@@ -6,6 +6,7 @@ import Avatar from "@/entities/user/ui/Avatar/Avatar";
 import Name from "@/entities/user/ui/Name/Name";
 import Username from "@/entities/user/ui/Username/Username";
 import styles from "./MessageBlock.module.scss"
+import MessageText from "@/entities/message/ui/MessageText/MessageText";
 
 interface Props {
     text: string;
@@ -16,35 +17,16 @@ interface Props {
 }
 
 export default function MessageBlock({text, date, status, user, otherUser}: Props) {
-    if (user === "other") {
+    if (user == "other") {
         return (
             <div className={styles.otherContainer}>
                 <Avatar/>
-                <div className={styles.contentWrapper}>
-                    <div className={styles.authorRow}>
-                        <Name/>
-                        <Username/>
-                    </div>
-                    <div className={styles.otherBubble}>
-                        {text}
-                        <div className={styles.meta}>
-                            <TimeInfo date={new Date()} />
-                        </div>
-                    </div>
-                </div>
+                <MessageText text={text} date={date} status={status} user={"other"}/>
             </div>
         );
     }
 
     return (
-        <div className={styles.userContainer}>
-            <div className={styles.userBubble}>
-                {text}
-                <div className={styles.meta}>
-                    <TimeInfo date={new Date()} />
-                    <Status status={status} />
-                </div>
-            </div>
-        </div>
+        <MessageText text={text} date={date} status={status} user={"user"}/>
     );
 }
