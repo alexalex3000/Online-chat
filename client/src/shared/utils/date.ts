@@ -18,5 +18,5 @@ export default function getDayStr(date: Date){
 }
 
 export function getTime(date: Date){
-    return `${date.getHours()}:${date.getMinutes()}`
+    return `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}`
 }
