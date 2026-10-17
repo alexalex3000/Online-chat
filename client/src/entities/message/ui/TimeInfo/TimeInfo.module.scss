@@ -8,3 +8,15 @@
   user-select: none;
   white-space: nowrap;
 }
+
+.otherTime {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  user-select: none;
+  color: var(--text-secondary, #707579);
+  white-space: nowrap;
+}
+

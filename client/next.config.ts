@@ -6,8 +6,6 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
     turbopackUseBuiltinSass: true,
   },
-  cacheComponents: true,
-  partialPrefetching: true,
   reactCompiler: true,
   sassOptions: {
     includePaths: [path.join(__dirname, "src")],

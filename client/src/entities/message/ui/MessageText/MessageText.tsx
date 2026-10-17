@@ -79,7 +79,7 @@ export default function MessageText({ text, date, status, user }: Props) {
                 <div className={styles.otherBubble}>
                     {text.trim()}
                     <div className={styles.meta}>
-                        <TimeInfo date={date} />
+                        <TimeInfo date={date} user={user}/>
                     </div>
                 </div>
             </div>
@@ -91,7 +91,7 @@ export default function MessageText({ text, date, status, user }: Props) {
             <div className={styles.userBubble} onContextMenu={handleOpen}>
                 {text.trim()}
                 <div className={styles.meta}>
-                    <TimeInfo date={date} />
+                    <TimeInfo date={date} user={user}/>
                     <Status status={status} />
                 </div>
                 {isVisible && position.top !== 0 && (

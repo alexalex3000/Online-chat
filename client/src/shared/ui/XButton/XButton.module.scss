@@ -1,0 +1,45 @@
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+  user-select: none;
+
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  transition:
+          background-color 0.2s ease,
+          border-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.1s ease;
+
+  &:hover {
+    background-color: var(--accent-active-item);
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  &:focus-visible {
+    border-color: var(--border-focus);
+    box-shadow:
+            0 0 0 2px var(--border-focus),
+            0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+}

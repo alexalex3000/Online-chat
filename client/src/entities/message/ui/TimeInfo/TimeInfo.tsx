@@ -3,12 +3,13 @@ import styles from "./TimeInfo.module.scss"
 
 interface Props{
     date: Date
+    user: "user" | "other"
 }
 
-export default function TimeInfo({date}:Props){
+export default function TimeInfo({date, user}:Props){
     const time = getTime(date);
 
     return (
-        <p className={styles.time}>{time}</p>
+        <p className={user == "user" ? styles.time : styles.otherTime}>{time}</p>
     )
 }
