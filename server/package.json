@@ -17,6 +17,10 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "pg": "^8.23.1",
     "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
   }
 }
