@@ -1,5 +1,3 @@
-import {delay} from "@/entities/settigs/api/delay";
-
 export interface Setting {
     title: string;
     text?: string;

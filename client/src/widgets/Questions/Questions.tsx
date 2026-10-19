@@ -19,7 +19,7 @@ const helpQuestionsRaw: FAQItem[] = [
         answer: "Yes, navigate to Settings → Security → Email Address, enter your new email, and verify it with the security code."
     },
     {
-        question: "Can I edit or delete sent messages?",
+        question: "Can I edit or delete sent message?",
         answer: "Yes. Right-click the message (or long-press on mobile) and select either \"Edit\" or \"Delete\". When deleting, you can choose to remove it just for yourself or for everyone."
     },
     {

@@ -1,4 +1,4 @@
-import {app} from "./app";
+import app from "./app";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -12,3 +12,5 @@ async function startServer(){
         console.error("Cant start server")
     }
 }
+
+startServer();

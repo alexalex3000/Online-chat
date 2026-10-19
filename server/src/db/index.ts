@@ -3,7 +3,7 @@ import {drizzle} from "drizzle-orm/postgres-js"
 import * as schema from "./schema"
 import dotenv from "dotenv"
 
-dotenv.config()
+dotenv.config({path: ".env.local"})
 
 const connection = process.env.DATABASE_URL
 

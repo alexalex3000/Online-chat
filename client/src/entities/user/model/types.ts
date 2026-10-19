@@ -4,5 +4,6 @@ export interface User {
     surname: string;
     email: string;
     passwordHash: string;
+    lastTimeOnline: Date;
     logoUrl: string;
 }

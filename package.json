@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev:front": "npm run dev --prefix client"
+    "dev:front": "npm run dev --prefix client",
+    "dev:back": "npm run dev --prefix server"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
@@ -28,6 +29,7 @@
     "drizzle-orm": "^0.45.4",
     "express": "^5.3.0",
     "pg": "^8.23.1",
+    "postgres": "^3.4.9",
     "zod": "^4.6.7"
   }
 }

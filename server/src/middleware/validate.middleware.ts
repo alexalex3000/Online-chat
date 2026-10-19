@@ -1,22 +1,40 @@
 import { Request, Response, NextFunction } from 'express';
-import {z} from "zod";
+import {z, ZodError} from "zod";
 
-export const validateMiddleware = (schema: z._ZodType) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        const result = schema.safeParse(req.body);
+interface ValidateMiddleware {
+    body?: z._ZodType,
+    query?: z._ZodType,
+}
 
-        if(!result.success){
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    errors: result.error.issues.map((issue) => ({
-                        message: issue.message,
-                    }))
+export const validateMiddleware = (obj: ValidateMiddleware) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try{
+            if(obj.body){
+                req.body = await obj.body.parseAsync(req.body);
+            }
+
+            if(obj.query){
+                const parsedQuery = await obj.query.parseAsync(req.query);
+                Object.defineProperty(req, "query", {
+                    value: parsedQuery,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true,
                 });
-        }
+            }
 
-        req.body = result.data
-        next()
+            next()
+        } catch (error){
+            if (error instanceof ZodError) {
+                return res.status(400).json({
+                    success: false,
+                    errors: error.issues.map((issue) => ({
+                        field: issue.path.join("."),
+                        message: issue.message,
+                    })),
+                });
+            }
+            next(error);
+        }
     }
 }
