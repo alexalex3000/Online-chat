@@ -1,0 +1,11 @@
+1. validate Error status: 400
+
+                    success: false,
+                    errors: {message: string}[]
+
+2. Error handler status: 500
+
+                    success: false,
+                    error: string
+
+3.
