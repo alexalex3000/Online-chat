@@ -11,12 +11,12 @@ export class MessageService {
         return resData ?? null
     }
 
-    async writeMessage(body: MessageBody){
+    async writeMessage(body: MessageBody, userId: string){
         const [resData] = await db
             .insert(messageTable)
             .values({
                 message: body.message,
-                userId: body.userId,
+                userId: userId,
             })
             .returning()
 

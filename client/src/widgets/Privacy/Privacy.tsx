@@ -21,8 +21,8 @@ export default function Privacy() {
             action: delay
         },
         {
-            title: "Read Receipts",
-            text: "Send and receive read confirmations",
+            title: "Do Not Distract",
+            text: "Mute all incoming notifications and sound alerts",
             value: readReceipts,
             toggle: setReadReceipts,
             action: delay

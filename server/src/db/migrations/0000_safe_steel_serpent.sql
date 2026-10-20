@@ -1,18 +1,18 @@
-CREATE TYPE "public"."message_status" AS ENUM('pending', 'success', 'error');--> statement-breakpoint
 CREATE TABLE "messages" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"message" text NOT NULL,
-	"status" "message_status" DEFAULT 'pending' NOT NULL,
 	"user_id" uuid NOT NULL,
 	"date" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "settings" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"title" varchar(50) NOT NULL,
-	"text" text,
-	"value" boolean DEFAULT false NOT NULL,
-	"user_id" uuid NOT NULL
+	"user_id" uuid NOT NULL,
+	"chat_sounds" boolean DEFAULT true NOT NULL,
+	"pinned_message_alerts" boolean DEFAULT true NOT NULL,
+	"show_online_status" boolean DEFAULT true NOT NULL,
+	"do_not_distract" boolean DEFAULT false NOT NULL,
+	CONSTRAINT "settings_user_id_unique" UNIQUE("user_id")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (

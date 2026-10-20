@@ -1,20 +1,30 @@
-import { boolean, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, pgTable, uuid } from "drizzle-orm/pg-core";
 import { z } from "zod";
-import {userTable} from "../user/user.schema";
+import { userTable } from "../user/user.schema";
 
 export const settingsTable = pgTable("settings", {
     id: uuid("id").defaultRandom().primaryKey(),
-    title: varchar("title", { length: 50 }).notNull(),
-    text: text("text"),
-    value: boolean("value").default(false).notNull(),
     userId: uuid("user_id")
         .notNull()
+        .unique()
         .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
+
+    chatSounds: boolean("chat_sounds").default(true).notNull(),
+    pinnedMessageAlerts: boolean("pinned_message_alerts").default(true).notNull(),
+    showOnlineStatus: boolean("show_online_status").default(true).notNull(),
+    doNotDistract: boolean("do_not_distract").default(false).notNull(),
 });
 
-export const settingsValidationSchema = z.object({
-    title: z.string().min(1).max(50),
-    text: z.string().max(255).optional(),
-    value: z.boolean().default(false),
-    userId: z.string().uuid(), // исправлен z.uuid()
+export const updateSettingsValidationSchema = z.object({
+    chatSounds: z.boolean().optional(),
+    pinnedMessageAlerts: z.boolean().optional(),
+    showOnlineStatus: z.boolean().optional(),
+    doNotDistract: z.boolean().optional(),
 });
+
+export const validateUserIdSchema = z.object({
+    userId: z.string().min(1),
+})
+
+export type UserIdType = z.infer<typeof validateUserIdSchema>
+export type SettingsTitleTypes = z.infer<typeof updateSettingsValidationSchema>

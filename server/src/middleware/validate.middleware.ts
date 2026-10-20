@@ -4,6 +4,7 @@ import {z, ZodError} from "zod";
 interface ValidateMiddleware {
     body?: z._ZodType,
     query?: z._ZodType,
+    params?: z._ZodType,
 }
 
 export const validateMiddleware = (obj: ValidateMiddleware) => {
@@ -12,6 +13,15 @@ export const validateMiddleware = (obj: ValidateMiddleware) => {
             if(obj.body){
                 req.body = await obj.body.parseAsync(req.body);
             }
+
+            if(obj.params){
+                const parsedQuery = await obj.params.parseAsync(req.params);
+                Object.defineProperty(req, "params", {
+                    value: parsedQuery,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true,
+                });            }
 
             if(obj.query){
                 const parsedQuery = await obj.query.parseAsync(req.query);
