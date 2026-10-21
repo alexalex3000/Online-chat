@@ -52,3 +52,26 @@
   line-height: 1;
   margin: 0;
 }
+
+.noMargin {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+
+    .iconWrapper {
+      transform: scale(1.04);
+      background-color: var(--accent-hover, #417bc0);
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
