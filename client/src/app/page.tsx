@@ -10,9 +10,6 @@ import Register from "@/widgets/Register/Register";
 
 export default function Home() {
     return (
-        <div>
-            <Register/>
-            <Login />
-        </div>
+        <div></div>
     )
 }

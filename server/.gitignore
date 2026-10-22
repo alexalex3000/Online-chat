@@ -50,4 +50,6 @@ coverage/
 .vercel/
 .turbo/
 
+.env.local
+.env
 responseTypes
