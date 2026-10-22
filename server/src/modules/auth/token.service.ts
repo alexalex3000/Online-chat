@@ -3,6 +3,7 @@ import {sessionTable, TokenPayload} from "./auth.schema";
 import jwt from "jsonwebtoken";
 import {db} from "../../db";
 import {eq} from "drizzle-orm";
+import {userTable} from "../user/user.schema";
 
 config({path: ".env.local"});
 
@@ -42,14 +43,22 @@ export class TokenService {
 
     async createSession(userId: string, refreshToken: string){
         const expiresAt = new Date();
+        const currDate = new Date();
         expiresAt.setDate(expiresAt.getDate() + 30);
+
+        await db
+            .update(userTable)
+            .set({
+                lastTimeOnline: currDate
+            })
 
         const [session] = await db
             .insert(sessionTable)
             .values({
                 userId,
                 refreshToken,
-                expiresAt
+                expiresAt,
+                createdAt: currDate,
             })
             .returning()
 

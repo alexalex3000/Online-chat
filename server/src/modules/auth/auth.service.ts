@@ -34,7 +34,7 @@ export class AuthService {
                     name: userData.name,
                     surname: userData.surname,
                     email: userData.email,
-                    passwordHash:passwordHashCoded ,
+                    passwordHash:passwordHashCoded,
                 })
                 .returning();
 
