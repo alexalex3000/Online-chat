@@ -1,20 +1,21 @@
-import {Router} from "express";
-import {validateMiddleware} from "../../middleware/validate.middleware";
-import {updateSettingsValidationSchema, validateUserIdSchema} from "./settings.schema";
-import {settingsContollerObj} from "./settings.controller";
+import { Router } from "express";
+import { validateMiddleware } from "../../middleware/validate.middleware";
+import { updateSettingsValidationSchema, validateUserIdSchema } from "./settings.schema";
+import { settingsContollerObj } from "./settings.controller";
+import { authMiddleware } from "../../middleware/checkCookie.middleware";
 
-const settingsRoute = Router({mergeParams: true});
+const settingsRoute = Router({ mergeParams: true });
 
 settingsRoute
     .route("/")
-    .get(settingsContollerObj.getSettings)
-    .post(validateMiddleware(
-        {
+    .get(authMiddleware, settingsContollerObj.getSettings)
+    .patch(
+        authMiddleware,
+        validateMiddleware({
             body: updateSettingsValidationSchema,
-            params: validateUserIdSchema
+            params: validateUserIdSchema,
         }),
         settingsContollerObj.changeSetting
-    )
+    );
 
-export default settingsRoute
-
+export default settingsRoute;

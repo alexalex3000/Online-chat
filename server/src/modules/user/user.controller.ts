@@ -1,46 +1,65 @@
-import {Request, Response, NextFunction} from "express";
-import {ChangeUser, User} from "./user.schema";
-import {userServiceObj} from "./user.service";
+import { Request, Response, NextFunction } from "express";
+import { ChangeUser } from "./user.schema";
+import { userServiceObj } from "./user.service";
+import { AuthenticatedRequest } from "../../middleware/checkCookie.middleware";
 
 export class UserController {
-    async getUser(req: Request<{id: string}>, res: Response, next: NextFunction) {
-        try{
-            const {id} = req.params;
+    async getUser(req: AuthenticatedRequest<{ id: string }>, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+            const currentUserId = req.user!.id;
+
+            if (currentUserId !== id) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Forbidden: Access denied to this resource"
+                });
+            }
 
             const result = await userServiceObj.getUser(id);
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 user: result
-            })
-        } catch (e){
-            next(e)
+            });
+        } catch (e) {
+            next(e);
         }
     }
-    async changeUser(req: Request<{id: string}, {}, ChangeUser>, res: Response, next: NextFunction) {
-        try{
-            const {id} = req.params;
+
+    async changeUser(req: AuthenticatedRequest<{ id: string }, {}, ChangeUser>, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+            const currentUserId = req.user!.id;
+
+            if (currentUserId !== id) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Forbidden: You cannot modify other users' profiles"
+                });
+            }
 
             const result = await userServiceObj.changeUser(id, req.body);
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 user: result
-            })
-        } catch (e){
-            next(e)
+            });
+        } catch (e) {
+            next(e);
         }
     }
+
     async getUserCount(req: Request, res: Response, next: NextFunction) {
-        try{
+        try {
             const result = await userServiceObj.getUserCount();
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 total: result
-            })
-        } catch (e){
-            next(e)
+            });
+        } catch (e) {
+            next(e);
         }
     }
 }

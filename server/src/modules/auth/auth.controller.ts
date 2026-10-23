@@ -1,6 +1,8 @@
 import {Request, Response, NextFunction} from "express";
 import {authServiceObj} from "./auth.service";
 import {LoginData, RegisterData} from "./auth.schema";
+import {tokenServiceObj} from "./token.service";
+import {AuthenticatedRequest} from "../../middleware/checkCookie.middleware";
 
 const COOKIE_OPTIONS = {
     httpOnly: true,
@@ -15,7 +17,7 @@ export class AuthController {
             const result = await authServiceObj.register(req.body);
             res.cookie("refreshToken", result.tokens.refreshToken, COOKIE_OPTIONS);
 
-            res.status(200).json({
+            return res.status(201).json({
                 success: true,
                 user: result.user,
                 accessToken: result.tokens.accessToken,
@@ -29,7 +31,7 @@ export class AuthController {
             const result = await authServiceObj.login(req.body);
             res.cookie("refreshToken", result.tokens.refreshToken, COOKIE_OPTIONS);
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 user: result.user,
                 accessToken: result.tokens.accessToken,
@@ -39,12 +41,14 @@ export class AuthController {
         }
     }
 
-    async refresh(req: Request, res: Response, next: NextFunction) {
+    async refresh(req: AuthenticatedRequest, res: Response, next: NextFunction) {
         try {
             const { refreshToken } = req.cookies;
+
             const result = await authServiceObj.refresh(refreshToken);
             res.cookie("refreshToken", result.tokens.refreshToken, COOKIE_OPTIONS);
-            res.status(200).json({
+
+            return res.status(201).json({
                 success: true,
                 user: result.user,
                 accessToken: result.tokens.accessToken,
@@ -53,14 +57,15 @@ export class AuthController {
             next(e)
         }
     }
-    async logout(req: Request, res: Response, next: NextFunction) {
+    async logout(req: AuthenticatedRequest, res: Response, next: NextFunction) {
         try {
             const { refreshToken } = req.cookies;
+
             await authServiceObj.logout(refreshToken);
 
             res.clearCookie("refreshToken");
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: "Logged out from current device",
             });
@@ -69,14 +74,15 @@ export class AuthController {
         }
     }
 
-    allLogout = async (req: Request<{}, {}, { userId: string }>, res: Response, next: NextFunction) => {
+    allLogout = async (req: AuthenticatedRequest<{}, {}, { userId: string }>, res: Response, next: NextFunction) => {
         try {
-            const { userId } = req.body;
+            const userId = req.user!.id;
+
             await authServiceObj.logoutAll(userId);
 
             res.clearCookie("refreshToken");
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: "Logged out from all devices",
             });

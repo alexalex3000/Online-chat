@@ -4,10 +4,11 @@ import {SettingsTitleTypes} from "./settings.schema";
 import {eq, sql} from "drizzle-orm";
 
 export class SettingsService {
-    async getSettings(){
+    async getSettings(userId: string) {
         const response = await db
             .select()
             .from(settingsTable)
+            .where(eq(settingsTable.userId, userId))
 
         return response ?? []
     }

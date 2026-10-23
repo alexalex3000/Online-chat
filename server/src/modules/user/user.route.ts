@@ -2,6 +2,7 @@ import {Router} from "express";
 import {userControllerObj} from "./user.controller";
 import {validateMiddleware} from "../../middleware/validate.middleware";
 import {changeUserValidateSchema} from "./user.schema";
+import {authMiddleware} from "../../middleware/checkCookie.middleware";
 
 const userRoute = Router();
 
@@ -11,7 +12,7 @@ userRoute
 
 userRoute
     .route("/:id")
-    .get(userControllerObj.getUser)
-    .post(validateMiddleware({body: changeUserValidateSchema}),userControllerObj.changeUser)
+    .get(authMiddleware,userControllerObj.getUser)
+    .patch(authMiddleware,validateMiddleware({body: changeUserValidateSchema}),userControllerObj.changeUser)
 
 export default userRoute;

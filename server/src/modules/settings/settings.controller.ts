@@ -1,31 +1,52 @@
-import {Request, Response, NextFunction} from "express";
-import {settingsServiceObj} from "./setting.service";
-import type {UserIdType} from "./settings.schema";
+import { Response, NextFunction } from "express";
+import { settingsServiceObj } from "./settings.service";
+import type { UserIdType } from "./settings.schema";
+import { AuthenticatedRequest } from "../../middleware/checkCookie.middleware";
 
 export class SettingsController {
-    async getSettings(req: Request, res: Response, next: NextFunction) {
-        try{
-            const result = await settingsServiceObj.getSettings()
+    async getSettings(req: AuthenticatedRequest<UserIdType>, res: Response, next: NextFunction) {
+        try {
+            const { userId } = req.params;
+            const currentUserId = req.user!.id;
 
-            res.status(200).json({
+            if (userId !== currentUserId) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Forbidden: Cannot access external user settings"
+                });
+            }
+
+            const result = await settingsServiceObj.getSettings(userId);
+
+            return res.status(200).json({
                 success: true,
                 data: result
-            })
-        } catch (e){
-            next(e)
+            });
+        } catch (e) {
+            next(e);
         }
     }
 
-    async changeSetting(req: Request<UserIdType>, res: Response, next: NextFunction) {
-        try{
-            const result = await settingsServiceObj.changeSetting(req.body, req.params.userId)
+    async changeSetting(req: AuthenticatedRequest<UserIdType>, res: Response, next: NextFunction) {
+        try {
+            const { userId } = req.params;
+            const currentUserId = req.user!.id;
 
-            res.status(200).json({
+            if (userId !== currentUserId) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Forbidden: Cannot update external user settings"
+                });
+            }
+
+            const result = await settingsServiceObj.changeSetting(req.body, userId);
+
+            return res.status(200).json({
                 success: true,
                 data: result
-            })
-        } catch (e){
-            next(e)
+            });
+        } catch (e) {
+            next(e);
         }
     }
 }

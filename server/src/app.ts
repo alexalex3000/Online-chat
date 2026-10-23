@@ -5,9 +5,20 @@ import settingsRoute from "./modules/settings/settings.route";
 import cookieParser from "cookie-parser";
 import userRoute from "./modules/user/user.route";
 import authRoute from "./modules/auth/auth.route";
-
+import cors from "cors";
 
 const app = express()
+
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
+
+app.use(
+    cors({
+        origin: CLIENT_URL,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 
 app.use(express.json())
 app.use(cookieParser())
