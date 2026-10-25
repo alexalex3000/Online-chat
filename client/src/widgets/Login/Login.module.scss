@@ -1,7 +1,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.7rem;
   width: 100%;
   max-width: 440px;
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
@@ -22,6 +22,10 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  & div:first-child {
+    margin-bottom: 7px;
+  }
 }
 
 .title {
@@ -37,4 +41,30 @@
   color: #64748b;
   margin: 0;
   line-height: 1.4;
+}
+
+.switchText {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #94a3b8);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.link {
+  color: var(--primary, #5294e2);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+
+  &:hover {
+    color: #6ba6ee;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-focus, #5294e2);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 }
