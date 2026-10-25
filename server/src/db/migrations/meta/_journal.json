@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1792563875527,
-      "tag": "0000_faithful_skaar",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1792685729733,
-      "tag": "0001_grey_vector",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1792687131552,
-      "tag": "0002_pretty_mattie_franklin",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1792687430776,
-      "tag": "0003_acoustic_vision",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1792687654931,
-      "tag": "0004_zippy_umar",
+      "when": 1792949371030,
+      "tag": "0000_clammy_morlun",
       "breakpoints": true
     }
   ]

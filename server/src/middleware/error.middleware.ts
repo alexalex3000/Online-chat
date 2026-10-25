@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
 
 export const errorMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
-    res.status(500).send({success: false, error: err.message ?? "Something went wrong"});
+    res.status(500).json({success: false, error: err.message ?? "Something went wrong"});
 }

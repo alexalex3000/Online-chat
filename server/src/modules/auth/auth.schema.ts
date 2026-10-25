@@ -13,6 +13,7 @@ export const sessionTable = pgTable("sessions", {
 export const registerValidateSchema = z.object({
     name: z.string().min(1),
     surname: z.string().min(1),
+    username: z.string().min(1),
     email: z.string().email(),
     password: z.string().min(8).max(20),
 })
@@ -34,6 +35,7 @@ export interface TokenPayload{
 export interface RegisterData{
     name: string;
     surname: string;
+    username: string;
     email: string;
     password: string;
 }

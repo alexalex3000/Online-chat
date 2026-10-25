@@ -25,7 +25,6 @@ export class AuthController {
     async register(req: Request<{}, {}, RegisterData>, res: Response, next: NextFunction) {
         try {
             const result = await authServiceObj.register(req.body);
-
             res.cookie("accessToken", result.tokens.accessToken, ACCESS_COOKIE_OPTIONS);
             res.cookie("refreshToken", result.tokens.refreshToken, REFRESH_COOKIE_OPTIONS);
 

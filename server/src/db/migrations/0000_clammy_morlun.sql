@@ -11,7 +11,7 @@ CREATE TABLE "sessions" (
 	"user_id" uuid,
 	"refresh_token" text NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone NOT NULL,
 	CONSTRAINT "sessions_refresh_token_unique" UNIQUE("refresh_token")
 );
 --> statement-breakpoint
@@ -30,10 +30,12 @@ CREATE TABLE "users" (
 	"role" "role_enum" DEFAULT 'user' NOT NULL,
 	"name" varchar(30) NOT NULL,
 	"surname" varchar(30) NOT NULL,
+	"username" varchar(30) NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"password_hash" text NOT NULL,
-	"last_time_online" timestamp DEFAULT now() NOT NULL,
+	"last_time_online" timestamp with time zone DEFAULT now() NOT NULL,
 	"logo_url" text,
+	CONSTRAINT "users_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint

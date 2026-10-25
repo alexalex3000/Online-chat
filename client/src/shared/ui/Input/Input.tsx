@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useId } from "react";
+import React, { useState, useId, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import styles from "./Input.module.scss";
 
@@ -35,8 +35,20 @@ export default function Input({
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [visibleError, setVisibleError] = useState<string | undefined>(errorMessage);
+
+    useEffect(() => {
+        setVisibleError(errorMessage);
+    }, [errorMessage]);
 
     const currentType = type === "password" ? (isPasswordVisible ? "text" : "password") : type;
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (visibleError) {
+            setVisibleError(undefined);
+        }
+        onChange?.(e.target.value);
+    };
 
     return (
         <div className={`${styles.container} ${wrapperClassName}`}>
@@ -46,11 +58,7 @@ export default function Input({
                 </label>
             )}
 
-            <div
-                className={`${styles.wrapper} ${
-                    errorMessage ? styles.error : ""
-                }`}
-            >
+            <div className={`${styles.wrapper} ${visibleError ? styles.error : ""}`}>
                 {before && <span className={styles.before}>{before}</span>}
 
                 <input
@@ -60,7 +68,7 @@ export default function Input({
                     name={name}
                     placeholder={placeholder}
                     className={styles.input}
-                    onChange={(e) => onChange?.(e.target.value)}
+                    onChange={handleChange}
                     onFocus={(e) => {
                         setIsFocused(true);
                         props.onFocus?.(e);
@@ -97,7 +105,7 @@ export default function Input({
                 )}
             </div>
 
-            {errorMessage && <span className={styles.errorText}>{errorMessage}</span>}
+            {visibleError && <span className={styles.errorText}>{visibleError}</span>}
         </div>
     );
 }

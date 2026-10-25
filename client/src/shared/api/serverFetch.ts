@@ -71,7 +71,7 @@ export async function serverFetch<T>(
         cache: 'no-store',
     });
 
-   if (response.status === 401) {
+    if (response.status === 401) {
         const refreshResponse = await fetch(`${BACKEND_URL}/auth/refresh`, {
             method: 'POST',
             headers: {
@@ -89,8 +89,7 @@ export async function serverFetch<T>(
 
         await forwardSetCookieHeaders(refreshResponse);
 
-        const updatedCookieStore = await cookies();
-        cookieHeader = updatedCookieStore.toString();
+        cookieHeader = cookieStore.toString();
 
         response = await fetch(url, {
             ...options,
@@ -103,10 +102,12 @@ export async function serverFetch<T>(
         });
     }
 
+    await forwardSetCookieHeaders(response);
+
     const result = await response.json();
 
     if (!response.ok) {
-        throw new Error(result?.message || `Request failed with status ${response.status}`);
+        throw new Error(result?.error || `Request failed with status ${response.status}`);
     }
 
     return result as T;

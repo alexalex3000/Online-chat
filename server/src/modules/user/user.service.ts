@@ -27,11 +27,6 @@ export class UserService{
     }
 
     async getUserCount(){
-        const thresholdDate = new Date(Date.now() - 5 * 60 * 1000); // 5 минут назад
-
-        console.log(thresholdDate);
-        console.log(new Date());
-
         const [totalResult] = await db
             .select({ value: count() })
             .from(userTable);

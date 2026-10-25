@@ -47,6 +47,7 @@ export class TokenService {
             .set({
                 lastTimeOnline: currDate
             })
+            .where(eq(userTable.id, userId))
 
         const [session] = await db
             .insert(sessionTable)

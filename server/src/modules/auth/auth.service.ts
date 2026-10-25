@@ -33,6 +33,7 @@ export class AuthService {
                 .values({
                     name: userData.name,
                     surname: userData.surname,
+                    username: userData.username,
                     email: userData.email,
                     passwordHash:passwordHashCoded,
                 })
