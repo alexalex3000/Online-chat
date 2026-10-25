@@ -1,0 +1,106 @@
+.container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 300px;
+  max-width: calc(100vw - 32px);
+  padding: 12px 16px;
+  border-radius: 12px;
+
+  background-color: var(--bg-card, #141b26);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+
+  color: var(--text-primary, #ffffff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  &.closing {
+    animation: slideDown 0.2s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+  }
+}
+
+.success {
+  border-left: 4px solid #10b981;
+  .icon {
+    color: #10b981;
+  }
+}
+
+.error {
+  border-left: 4px solid #ff5c5c;
+  .icon {
+    color: #ff5c5c;
+  }
+}
+
+.info {
+  border-left: 4px solid var(--border-focus, #5294e2);
+  .icon {
+    color: var(--border-focus, #5294e2);
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.message {
+  flex: 1;
+  word-break: break-word;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  margin: -4px -4px -4px 0;
+  cursor: pointer;
+  color: var(--text-muted, #64748b);
+  border-radius: 6px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+
+  &:hover {
+    color: var(--text-primary, #ffffff);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, 16px) scale(0.96);
+  }
+}
