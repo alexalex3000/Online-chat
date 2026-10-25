@@ -1,8 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { db } from "../db";
-import { sessionTable } from "../db/schema";
-import { eq } from "drizzle-orm";
+import {tokenServiceObj} from "../modules/auth/token.service";
 
 export interface AuthenticatedRequest<
     P = Record<string, any>,
@@ -12,7 +9,7 @@ export interface AuthenticatedRequest<
 > extends Request<P, ResBody, ReqBody, ReqQuery> {
     user?: {
         id: string;
-        email: string;
+        role: "user" | "admin";
     };
 }
 
@@ -21,27 +18,22 @@ export async function authMiddleware(
     res: Response,
     next: NextFunction
 ) {
-    const refreshToken = req.cookies?.refreshToken;
+    const authHeader = req.headers.authorization;
 
-    if (!refreshToken) {
-        return res.status(401).json({ success: false, message: "Unauthorized: Refresh token missing" });
+    if(!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ success: false, message: "Unauthorized: Access token missing" });
     }
 
+    const token = authHeader.split(" ")[1];
+
     try {
-        const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as {
-            id: string;
-            email: string;
-        };
+        const payload = tokenServiceObj.verifyAccessToken(token);
 
-        const existingSession = await db.query.sessionTable.findFirst({
-            where: eq(sessionTable.refreshToken, refreshToken),
-        });
-
-        if (!existingSession) {
-            return res.status(401).json({ success: false, message: "Session revoked or expired" });
+        if(!payload) {
+            throw new Error();
         }
 
-        req.user = { id: payload.id, email: payload.email };
+        req.user = {id: payload.userId, role: payload.role};
         next();
     } catch (error) {
         return res.status(401).json({ success: false, message: "Session expired or invalid" });

@@ -19,7 +19,7 @@ export const registerValidateSchema = z.object({
 
 export const loginValidateSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(4).max(8),
+    password: z.string().min(4).max(20),
 })
 
 export const logoutAllValidateSchema = z.object({
