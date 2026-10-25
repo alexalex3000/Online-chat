@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import {tokenServiceObj} from "../modules/auth/token.service";
+import { tokenServiceObj } from "../modules/auth/token.service";
+import jwt from "jsonwebtoken";
 
 export interface AuthenticatedRequest<
     P = Record<string, any>,
@@ -13,29 +14,43 @@ export interface AuthenticatedRequest<
     };
 }
 
-export async function authMiddleware(
+export function authMiddleware(
     req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
 ) {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies?.accessToken;
 
-    if(!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({ success: false, message: "Unauthorized: Access token missing" });
+    if (!token) {
+        return res.status(401).json({
+            success: false,
+            code: "TOKEN_MISSING",
+            message: "Unauthorized: Access token missing",
+        });
     }
-
-    const token = authHeader.split(" ")[1];
 
     try {
         const payload = tokenServiceObj.verifyAccessToken(token);
 
-        if(!payload) {
+        if (!payload) {
             throw new Error();
         }
 
-        req.user = {id: payload.userId, role: payload.role};
+        req.user = { id: payload.userId, role: payload.role };
         next();
     } catch (error) {
-        return res.status(401).json({ success: false, message: "Session expired or invalid" });
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(401).json({
+                success: false,
+                code: "TOKEN_EXPIRED",
+                message: "Access token has expired",
+            });
+        }
+
+        return res.status(401).json({
+            success: false,
+            code: "TOKEN_INVALID",
+            message: "Session expired or invalid",
+        });
     }
 }

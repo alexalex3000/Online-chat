@@ -26,11 +26,7 @@ export class TokenService {
     }
 
     verifyAccessToken(accessToken: string){
-        try{
-            return jwt.verify(accessToken, this.accessSecret) as TokenPayload;
-        } catch (e){
-            return null
-        }
+        return jwt.verify(accessToken, this.accessSecret) as TokenPayload;
     }
 
     verifyRefreshToken(refreshToken: string){

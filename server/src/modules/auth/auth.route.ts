@@ -24,7 +24,6 @@ authRoute.post(
 
 authRoute.post(
     "/refresh",
-    authMiddleware,
     authControllerObj.refresh
 );
 
