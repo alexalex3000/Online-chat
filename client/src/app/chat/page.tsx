@@ -3,7 +3,6 @@ import styles from "./page.module.scss"
 import ChatMessages from "@/widgets/ChatMessages/ChatMessages";
 import UserPageWrapper from "@/entities/user/ui/UserPageWrapper/UserPageWrapper";
 import UserPage from "@/entities/user/ui/UserPage/UserPage";
-import AlertWindow from "@/shared/ui/AlertWindow/AlertWindow";
 
 export default function ChatPage(){
     return (

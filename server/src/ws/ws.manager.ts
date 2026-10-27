@@ -44,6 +44,18 @@ class WsManager {
         return false;
     }
 
+    getOnline(): number {
+        let count = 0;
+
+        for (const sockets of this.clients.values()) {
+            if (sockets.size > 0) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     sendToUsers(usersId: {id: string}[], message: WsServerMessage) {
         for(const user of usersId){
             const userSockets = this.clients.get(user.id);

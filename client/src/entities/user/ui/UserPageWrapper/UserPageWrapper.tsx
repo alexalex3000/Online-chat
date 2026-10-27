@@ -43,6 +43,22 @@ export default function UserPageWrapper({UserPage}: Props) {
         }
     }, [])
 
+    useEffect(() => {
+        const socket = new WebSocket("ws://localhost:4200/ws");
+
+        socket.onopen = () => {
+            console.log("connected");
+        }
+
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        socket.onclose = (event) => {
+            console.log(`WebSocket closed: code=${event.code}, reason=${event.reason}`);
+        };
+    }, []);
+
     const isVisible = queryParams.get("settings") === "user-page"
 
     if(!isVisible) return null

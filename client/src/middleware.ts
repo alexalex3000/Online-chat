@@ -33,7 +33,6 @@ export async function middleware(request: NextRequest) {
     }
 
     if (!accessToken && !refreshToken) {
-        console.log("2")
         return NextResponse.redirect(new URL('/login', request.url));
     }
 

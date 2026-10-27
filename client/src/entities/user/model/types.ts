@@ -11,5 +11,13 @@ export interface User {
 
 export interface GetUserResponse {
     success: boolean;
-    user: User;
+    user?: User;
+}
+
+export interface GetUserCountResponse {
+    success: boolean;
+    total?: {
+        total: number;
+        onlineTotal: number;
+    };
 }

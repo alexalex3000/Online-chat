@@ -6,7 +6,6 @@ import Section from "@/shared/ui/Section/Section";
 import styles from "./UserLink.module.scss";
 import {userApi} from "@/entities/user/api/user.api";
 import {GetUserResponse} from "@/entities/user/model/types";
-import {cookies} from "next/headers";
 
 interface Props {
     large?: boolean;
@@ -19,12 +18,12 @@ export default async function UserLink({large}: Props) {
         return (
             <div className={styles.containerLarge}>
                 <Avatar
-                    name={`${info.user.name} ${info.user.surname}`}
-                    url={info.user?.logoUrl}
+                    name={`${info?.user?.name} ${info?.user?.surname}`}
+                    url={info?.user?.logoUrl}
                     large />
-                <div className={styles.userInfo}>
-                    <Name large name={`${info.user.name} ${info.user.surname}`}/>
-                    <Username large username={info.user.username}/>
+                <div className={styles?.userInfo}>
+                    <Name large name={`${info?.user?.name} ${info?.user?.surname}`}/>
+                    <Username large username={info?.user?.username}/>
                 </div>
             </div>
         );
@@ -34,12 +33,12 @@ export default async function UserLink({large}: Props) {
         <Section small>
             <div className={styles.container}>
                 <Avatar
-                    name={`${info.user.name} ${info.user.surname}`}
-                    url={info.user?.logoUrl}
+                    name={`${info?.user?.name} ${info?.user?.surname}`}
+                    url={info?.user?.logoUrl}
                 />
-                <div className={styles.userInfo}>
-                    <Name name={`${info.user.name} ${info.user.surname}`}/>
-                    <Username username={info.user.username}/>
+                <div className={styles?.userInfo}>
+                    <Name name={`${info?.user?.name} ${info?.user?.surname}`}/>
+                    <Username username={info?.user?.username}/>
                 </div>
                 <ChevronRight className={styles.arrow}/>
             </div>

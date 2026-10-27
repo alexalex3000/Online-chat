@@ -32,16 +32,12 @@ export class UserService{
             .select({ value: count() })
             .from(userTable);
 
-        const [onlineResult] = await db
-            .select({ value: count() })
-            .from(userTable)
-            .where(
-                sql`${userTable.lastTimeOnline} >= NOW() - INTERVAL '5 minutes'`
-            );
-        
+
+        console.log(wsManager.getOnline())
+
         return {
             total: totalResult?.value ?? 0,
-            onlineTotal: onlineResult?.value ?? 0,
+            onlineTotal: wsManager.getOnline(),
         };
     }
 
