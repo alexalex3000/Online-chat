@@ -1,5 +1,5 @@
 export const getFirstLatters = (name: string) => {
     const names = name.split(' ');
 
-    return `${names[0][0]}${names[1][0]}`;
+    return `${names[0][0].toUpperCase()}${names[1][0].toUpperCase()}`;
 }

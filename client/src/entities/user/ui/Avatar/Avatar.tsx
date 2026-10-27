@@ -3,6 +3,7 @@
 import styles from "./Avatar.module.scss"
 import {getFirstLatters} from "@/shared/utils/getFirstLatters";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import Image from "next/image";
 
 export interface Props {
     url?: string
@@ -11,7 +12,7 @@ export interface Props {
     clickable?: boolean
 }
 
-export default function Avatar({ url, name = "Alexey Petrikevitch", large, clickable}: Props) {
+export default function Avatar({url, name = "Alexey Petrikevitch", large, clickable}: Props) {
     const router = useRouter();
     const pathname = usePathname()
 
@@ -26,16 +27,18 @@ export default function Avatar({ url, name = "Alexey Petrikevitch", large, click
     }
 
     return (
-        <div className={large? styles.large : styles.avatar} onClick={clickable ? handleOpen : () => null}>
+        <div className={large ? styles.large : styles.avatar} onClick={clickable ? handleOpen : () => null}>
             {firstLetters}
             {
-                /*<Image
-          src={url!}
-          alt={name}
-          width={size}
-          height={size}
-          className={styles.image}
-        />*/
+                url && (
+                    <Image
+                        src={url!}
+                        alt={name}
+                        width={40}
+                        height={40}
+                        className={styles.image}
+                    />
+                )
             }
         </div>
     )

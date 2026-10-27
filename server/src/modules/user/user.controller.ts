@@ -4,19 +4,11 @@ import { userServiceObj } from "./user.service";
 import { AuthenticatedRequest } from "../../middleware/checkCookie.middleware";
 
 export class UserController {
-    async getUser(req: AuthenticatedRequest<{ id: string }>, res: Response, next: NextFunction) {
+    async getUser(req: AuthenticatedRequest, res: Response, next: NextFunction) {
         try {
-            const { id } = req.params;
             const currentUserId = req.user!.id;
 
-            if (currentUserId !== id) {
-                return res.status(403).json({
-                    success: false,
-                    message: "Forbidden: Access denied to this resource"
-                });
-            }
-
-            const result = await userServiceObj.getUser(id);
+            const result = await userServiceObj.getUser(currentUserId);
 
             return res.status(200).json({
                 success: true,
@@ -50,19 +42,11 @@ export class UserController {
         }
     }
 
-    async changeUser(req: AuthenticatedRequest<{ id: string }, {}, ChangeUser>, res: Response, next: NextFunction) {
+    async changeUser(req: AuthenticatedRequest<{}, {}, ChangeUser>, res: Response, next: NextFunction) {
         try {
-            const { id } = req.params;
             const currentUserId = req.user!.id;
 
-            if (currentUserId !== id) {
-                return res.status(403).json({
-                    success: false,
-                    message: "Forbidden: You cannot modify other users' profiles"
-                });
-            }
-
-            const result = await userServiceObj.changeUser(id, req.body);
+            const result = await userServiceObj.changeUser(currentUserId, req.body);
 
             return res.status(200).json({
                 success: true,

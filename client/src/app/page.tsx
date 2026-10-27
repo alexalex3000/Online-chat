@@ -1,15 +1,13 @@
-"use client"
+import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
 
-import UserPage from "@/entities/user/ui/UserPage/UserPage";
-import Logo from "@/shared/ui/Logo/Logo";
-import Button from "@/shared/ui/Button/Button";
-import FullButton from "@/shared/ui/FullButton/FullButton";
-import LoginForm from "@/features/Auth/login/ui/LoginForm/LoginForm";
-import Login from "@/widgets/Login/Login";
-import Register from "@/widgets/Register/Register";
+export default async function Home() {
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get("accessToken")?.value
 
-export default function Home() {
-    return (
-        <div></div>
-    )
+    if (!accessToken) {
+        redirect("/login")
+    }
+
+    redirect("/chat")
 }

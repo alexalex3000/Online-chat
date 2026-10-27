@@ -11,7 +11,7 @@ userRoute
     .get(userControllerObj.getUserCount)
 
 userRoute
-    .route("/:id")
+    .route("/me")
     .get(authMiddleware,userControllerObj.getUser)
     .patch(authMiddleware,validateMiddleware({body: changeUserValidateSchema}),userControllerObj.changeUser)
 

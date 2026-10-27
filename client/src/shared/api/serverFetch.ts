@@ -4,54 +4,6 @@ import { redirect } from 'next/navigation';
 
 const BACKEND_URL = process.env.SERVER_ENDPOINT || 'http://localhost:4200/api/v1';
 
-async function forwardSetCookieHeaders(response: Response) {
-    const cookieStore = await cookies();
-
-    const setCookies = response.headers.getSetCookie
-        ? response.headers.getSetCookie()
-        : [response.headers.get('set-cookie') || ''];
-
-    for (const cookieStr of setCookies) {
-        if (!cookieStr) continue;
-
-        const parts = cookieStr.split(';').map((p) => p.trim());
-        const [nameVal, ...attrs] = parts;
-        const [name, val] = nameVal.split('=');
-
-        if (!name || val === undefined) continue;
-
-        let maxAge: number | undefined;
-        let path = '/';
-        let httpOnly = false;
-        let secure = false;
-        let sameSite: 'strict' | 'lax' | 'none' = 'lax';
-
-        for (const attr of attrs) {
-            const lower = attr.toLowerCase();
-            if (lower.startsWith('max-age=')) {
-                maxAge = parseInt(attr.split('=')[1], 10);
-            } else if (lower.startsWith('path=')) {
-                path = attr.split('=')[1];
-            } else if (lower === 'httponly') {
-                httpOnly = true;
-            } else if (lower === 'secure') {
-                secure = true;
-            } else if (lower.startsWith('samesite=')) {
-                const s = lower.split('=')[1];
-                if (s === 'strict' || s === 'lax' || s === 'none') sameSite = s;
-            }
-        }
-
-        cookieStore.set(name, val, {
-            path,
-            httpOnly,
-            secure,
-            sameSite,
-            ...(maxAge !== undefined ? { maxAge } : {}),
-        });
-    }
-}
-
 export async function serverFetch<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -59,9 +11,12 @@ export async function serverFetch<T>(
     const cookieStore = await cookies();
     const url = `${BACKEND_URL}${endpoint}`;
 
-    let cookieHeader = cookieStore.toString();
+    const cookieHeader = cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join('; ');
 
-    let response = await fetch(url, {
+    const response = await fetch(url, {
         ...options,
         headers: {
             'Content-Type': 'application/json',
@@ -71,43 +26,47 @@ export async function serverFetch<T>(
         cache: 'no-store',
     });
 
-    if (response.status === 401) {
-        const refreshResponse = await fetch(`${BACKEND_URL}/auth/refresh`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(cookieHeader ? { Cookie: cookieHeader } : {}),
-            },
-            cache: 'no-store',
-        });
+    const setCookieHeaders = response.headers.getSetCookie?.() || [response.headers.get('set-cookie') || ''];
 
-        if (!refreshResponse.ok) {
-            cookieStore.delete('accessToken');
-            cookieStore.delete('refreshToken');
-            redirect('/login');
+    for (const cookieStr of setCookieHeaders) {
+        if (!cookieStr) continue;
+
+        const [nameValue, ...directives] = cookieStr.split(';');
+        const [name, ...valParts] = nameValue.split('=');
+        const value = valParts.join('=');
+
+        if (!name || value === undefined) continue;
+
+        const isHttpOnly = directives.some((d) => d.trim().toLowerCase() === 'httponly');
+        const isSecure = directives.some((d) => d.trim().toLowerCase() === 'secure');
+
+        const pathDirective = directives.find((d) => d.trim().toLowerCase().startsWith('path='));
+        const path = pathDirective ? pathDirective.split('=')[1].trim() : '/';
+
+        const maxAgeDirective = directives.find((d) => d.trim().toLowerCase().startsWith('max-age='));
+        const maxAge = maxAgeDirective ? parseInt(maxAgeDirective.split('=')[1].trim(), 10) : undefined;
+
+        try {
+            cookieStore.set(name.trim(), value.trim(), {
+                httpOnly: isHttpOnly,
+                secure: process.env.NODE_ENV === 'production' ? isSecure : false,
+                sameSite: 'lax',
+                path: path,
+                maxAge: maxAge,
+            });
+        } catch(e) {
+            console.error(e)
         }
-
-        await forwardSetCookieHeaders(refreshResponse);
-
-        cookieHeader = cookieStore.toString();
-
-        response = await fetch(url, {
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...(cookieHeader ? { Cookie: cookieHeader } : {}),
-                ...options.headers,
-            },
-            cache: 'no-store',
-        });
     }
 
-    await forwardSetCookieHeaders(response);
+    if (response.status === 401) {
+        redirect('/login');
+    }
 
     const result = await response.json();
 
     if (!response.ok) {
-        throw new Error(result?.error || `Request failed with status ${response.status}`);
+        throw new Error(result?.message || `Request failed with status ${response.status}`);
     }
 
     return result as T;

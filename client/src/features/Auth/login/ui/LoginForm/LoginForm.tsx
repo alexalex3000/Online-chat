@@ -7,6 +7,7 @@ import styles from "./LoginForm.module.scss";
 import {useActionState} from "react";
 import {loginDrop} from "@/entities/user/api/login";
 import ErrorMessage from "@/shared/ui/ErrorMessage/ErrorMessage";
+import {redirect} from "next/navigation";
 
 interface FormErrors {
     server?: string;
@@ -64,6 +65,10 @@ export default function LoginForm() {
         { success: false }
     );
 
+    if(state.success){
+        redirect("/chat")
+    }
+
     return (
         <div className={styles.wrap}>
             <ErrorMessage message={state?.error?.server}/>
@@ -72,7 +77,7 @@ export default function LoginForm() {
                     type="email"
                     label="Email address"
                     name="email"
-                    value={state?.fields?.email}
+                    defaultValue={state?.fields?.email}
                     errorMessage={state.error?.email}
                     placeholder="you@example.com"
                 />
@@ -81,7 +86,7 @@ export default function LoginForm() {
                     label="Password"
                     placeholder="••••••••"
                     name="password"
-                    value={state?.fields?.password}
+                    defaultValue={state?.fields?.password}
                     errorMessage={state.error?.password}
                 />
                 <FullButton>

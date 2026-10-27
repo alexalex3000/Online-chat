@@ -4,7 +4,7 @@ import SidebarLinks from "@/features/SidebarLinks/SidebarLinks";
 import UserLink from "@/entities/user/ui/UserLink/UserLink";
 import Link from "next/link";
 
-export default function SidebarPc(){
+export default async function SidebarPc(){
     return (
         <div className={styles.sidebar}>
             <div className="flex gap-20 flex-col">

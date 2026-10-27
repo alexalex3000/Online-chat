@@ -7,6 +7,7 @@ import {ChevronRight} from "lucide-react";
 import {useActionState} from "react";
 import {registerDrop} from "@/entities/user/api/register";
 import ErrorMessage from "@/shared/ui/ErrorMessage/ErrorMessage";
+import {redirect} from "next/navigation";
 
 interface FormErrors {
     server?: string;
@@ -80,6 +81,10 @@ export default function RegisterForm() {
         {success: false}
     );
 
+    if(state.success){
+        redirect("/chat")
+    }
+
     return (
         <div className={styles.wrap}>
             <ErrorMessage message={state?.error?.server}/>
@@ -89,7 +94,7 @@ export default function RegisterForm() {
                         <Input
                             label="Name"
                             name="name"
-                            value={state?.fields?.name}
+                            defaultValue={state?.fields?.name}
                             placeholder="John"
                             errorMessage={state.error?.name}
                         />
@@ -97,7 +102,7 @@ export default function RegisterForm() {
                             label="Surname"
                             name="surname"
                             placeholder="Doe"
-                            value={state?.fields?.surname}
+                            defaultValue={state?.fields?.surname}
                             errorMessage={state.error?.surname}
                         />
                     </div>
@@ -106,7 +111,7 @@ export default function RegisterForm() {
                         name="username"
                         label="Username"
                         placeholder="johndoe"
-                        value={state?.fields?.username}
+                        defaultValue={state?.fields?.username}
                         errorMessage={state.error?.username}
                     />
                 </div>
@@ -116,7 +121,7 @@ export default function RegisterForm() {
                     name="email"
                     label="Email address"
                     placeholder="you@example.com"
-                    value={state?.fields?.email}
+                    defaultValue={state?.fields?.email}
                     errorMessage={state.error?.email}
                 />
 
@@ -125,7 +130,7 @@ export default function RegisterForm() {
                     name="password"
                     label="Password"
                     placeholder="••••••••"
-                    value={state?.fields?.password}
+                    defaultValue={state?.fields?.password}
                     errorMessage={state.error?.password}
                 />
 
@@ -134,7 +139,7 @@ export default function RegisterForm() {
                     name="confirm_password"
                     label="Confirm Password"
                     placeholder="••••••••"
-                    value={state?.fields?.confirmPassword}
+                    defaultValue={state?.fields?.confirmPassword}
                     errorMessage={state.error?.confirmPassword}
                 />
 

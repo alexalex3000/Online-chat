@@ -6,4 +6,10 @@ export interface User {
     passwordHash: string;
     lastTimeOnline: Date;
     logoUrl: string;
+    username: string;
+}
+
+export interface GetUserResponse {
+    success: boolean;
+    user: User;
 }

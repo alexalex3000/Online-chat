@@ -10,7 +10,7 @@ config({path: ".env.local"});
 export class TokenService {
     private readonly accessSecret = process.env.JWT_ACCESS_SECRET || "access_secret";
     private readonly refreshSecret = process.env.JWT_REFRESH_SECRET || "refresh_secret";
-    private readonly accessExpiresIn = process.env.JWT_ACCESS_EXPIRES_IN || "15m";
+    private readonly accessExpiresIn = process.env.JWT_ACCESS_EXPIRES_IN || "16m";
     private readonly refreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN || "30d";
 
     generateTokens(payload:TokenPayload){
