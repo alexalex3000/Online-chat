@@ -1,39 +1,52 @@
 import { WebSocket } from "ws";
-import {WsMessage} from "./ws.types";
+import {WsServerMessage} from "./ws.types";
 
-export class WebSocketManager {
-    private clients = new Map<string, WebSocket>();
+class WsManager {
+    private clients = new Map<string, Set<WebSocket>>();
 
-    addClient(userId: string, client: WebSocket) {
-        this.clients.set(userId, client);
-    }
-
-    removeClient(userId: string) {
-        this.clients.delete(userId);
-    }
-
-    sendToUser<T>(userId: string, data: WsMessage<T>) {
-        const socket = this.clients.get(userId);
-
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify(data));
-            return true
+    addClient(userId: string, socket: WebSocket) {
+        if (!this.clients.has(userId)) {
+            this.clients.set(userId, new Set());
         }
-
-        return false
+        this.clients.get(userId)!.add(socket);
     }
 
-    sendToUsers<T>(usersId: string[], data: WsMessage<T>) {
-        const rawData = JSON.stringify(data);
+    removeClient(userId: string, socket: WebSocket) {
+        const userSockets = this.clients.get(userId);
+        if (!userSockets) return;
 
-        for(const userId of usersId){
-            const socket = this.clients.get(userId);
+        userSockets.delete(socket);
 
-            if(socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(rawData);
+        if (userSockets.size === 0) {
+            this.clients.delete(userId);
+        }
+    }
+
+    sendToUser(userId: string, message: WsServerMessage) {
+        const userSockets = this.clients.get(userId);
+        if (!userSockets) return;
+
+        const data = JSON.stringify(message);
+        userSockets.forEach((ws) => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(data);
             }
+        });
+    }
+
+    sendToUsers(usersId: string[], message: WsServerMessage) {
+        for(const userId of usersId){
+            const userSockets = this.clients.get(userId);
+            if (!userSockets) return;
+
+            const data = JSON.stringify(message);
+            userSockets.forEach((ws) => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(data);
+                }
+            });
         }
     }
 }
 
-export const wsManager = new WebSocketManager();
+export const wsManager = new WsManager();
