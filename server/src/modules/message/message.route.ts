@@ -14,12 +14,5 @@ messageRouter
         }),
         messageControllerObject.getAll
     )
-    .post(
-        authMiddleware,
-        validateMiddleware({
-            body: messageBodyValidateSchema
-        }),
-        messageControllerObject.addMessage
-    )
 
 export default messageRouter
