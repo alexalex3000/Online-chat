@@ -99,6 +99,13 @@ export function initWebsocket(server: http.Server) {
         const userId = ws.userId!
 
         wsManager.addClient(userId, ws)
+
+        wsManager.broadcast({
+            type: "USER_ONLINE",
+            data: {
+                userId: userId,
+            }
+        })
         ws.isAlive = true
 
         ws.on("close", () => {

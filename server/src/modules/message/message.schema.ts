@@ -18,7 +18,6 @@ export const messageQueryValidateSchema = z.object({
 
 export const messageBodyValidateSchema = z.object({
     message: z.string().min(1),
-    userId: z.string().uuid(),
 })
 
 export type MessageBody = z.infer<typeof messageBodyValidateSchema>

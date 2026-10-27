@@ -16,29 +16,6 @@ export class MessageController {
             next(e)
         }
     }
-
-    async addMessage(req: AuthenticatedRequest<UserIdType>, res: Response, next: NextFunction) {
-        try{
-            const {userId} = req.params;
-            const id = req.user!.id;
-
-            if(userId !== id){
-                return res.status(400).json({
-                    success: true,
-                    message: "Dont have any rights"
-                })
-            }
-
-            const result = await messageServiceObj.writeMessage(req.body, req.params.userId)
-
-            return res.status(200).json({
-                success: true,
-                data: result
-            })
-        } catch (e){
-            next(e)
-        }
-    }
 }
 
 export const messageControllerObject = new MessageController()

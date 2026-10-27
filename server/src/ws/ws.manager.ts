@@ -34,9 +34,19 @@ class WsManager {
         });
     }
 
-    sendToUsers(usersId: string[], message: WsServerMessage) {
-        for(const userId of usersId){
-            const userSockets = this.clients.get(userId);
+    isUserOnline(userId: string): boolean {
+        const client = this.clients.get(userId);
+
+        if(client && client.size > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    sendToUsers(usersId: {id: string}[], message: WsServerMessage) {
+        for(const user of usersId){
+            const userSockets = this.clients.get(user.id);
             if (!userSockets) return;
 
             const data = JSON.stringify(message);
@@ -46,6 +56,18 @@ class WsManager {
                 }
             });
         }
+    }
+
+    broadcast(message: WsServerMessage) {
+        const data = JSON.stringify(message);
+
+        this.clients.forEach((sockets) => {
+            sockets.forEach((ws) => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(data);
+                }
+            });
+        });
     }
 }
 
