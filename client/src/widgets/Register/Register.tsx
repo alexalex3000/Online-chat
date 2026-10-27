@@ -12,7 +12,7 @@ export default function Register() {
                 <p className={styles.subtitle}>Set up your profile and start connecting.</p>
                 <p className={styles.switchText}>
                     Already have an account?{" "}
-                    <Link href="/register" className={styles.link}>
+                    <Link href="/login" className={styles.link}>
                         Sign in
                     </Link>
                 </p>

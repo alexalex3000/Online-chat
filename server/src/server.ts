@@ -1,16 +1,14 @@
 import app from "./app";
 import dotenv from 'dotenv';
+import * as http from "node:http";
+import {initWebsocket} from "./ws";
 
 dotenv.config();
 
-async function startServer(){
-    try{
-        app.listen(process.env.PORT, () => {
-            console.log(`Server started on ${process.env.PORT}`);
-        });
-    } catch (e){
-        console.error("Cant start server")
-    }
-}
+const server = http.createServer(app)
 
-startServer();
+initWebsocket(server);
+
+server.listen(process.env.PORT, () => {
+    console.log(`Server started on ${process.env.PORT}`);
+});
