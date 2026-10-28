@@ -4,11 +4,12 @@ import styles from "./UnwrapButton.module.scss"
 
 interface Props {
     children: React.ReactNode;
+    form: string
     onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export default function UnwrapButton({onClick, children}: Props) {
+export default function UnwrapButton({onClick, children, form}: Props) {
     return (
-        <button className={styles.button} onClick={onClick}>{children}</button>
+        <button form={form} className={styles.button} onClick={onClick}>{children}</button>
     )
 };

@@ -44,6 +44,8 @@ export class AuthController {
             res.cookie("accessToken", result.tokens.accessToken, ACCESS_COOKIE_OPTIONS);
             res.cookie("refreshToken", result.tokens.refreshToken, REFRESH_COOKIE_OPTIONS);
 
+            console.log(result);
+
             return res.status(200).json({
                 success: true,
                 user: result.user,

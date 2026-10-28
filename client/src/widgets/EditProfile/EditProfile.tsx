@@ -3,25 +3,22 @@ import Input from "@/shared/ui/Input/Input";
 import Textarea from "@/shared/ui/Textarea/Textarea";
 import styles from "./EditProfile.module.scss"
 import Label from "@/shared/ui/Label/Label";
+import EditProfileForm from "@/widgets/EditProfile/ui/EditProfileForm";
+import {userApi} from "@/entities/user/api/user.api";
+import {redirect} from "next/navigation";
 
-export default function EditProfile() {
+export default async function EditProfile() {
+    const result = await userApi.getUser()
+
+    if(!result.user || !result.success) {
+        redirect("/login");
+    }
+
     return (
         <div>
             <Label label="Edit Profile"/>
             <Section>
-                <div className={styles.wrapper}>
-                    <div className={styles.top}>
-                        <Input label="Full Name" placeholder="Jonh Due"/>
-                        <Input label="Username" placeholder="jonhdue" before="@"/>
-                    </div>
-                    <div className={styles.mid}>
-                        <Textarea label="Bio / About" placeholder="Tell about your self"/>
-                    </div>
-                    <div className={styles.bottom}>
-                        <Input label="Phone number" placeholder="123456789" before="+"/>
-                        <Input label="Location" placeholder="New York, USA"/>
-                    </div>
-                </div>
+               <EditProfileForm user={result.user}/>
             </Section>
         </div>
     )

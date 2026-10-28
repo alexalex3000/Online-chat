@@ -9,6 +9,8 @@ export const userTable = pgTable("users", {
     name: varchar("name", { length: 30 }).notNull(),
     surname: varchar("surname", { length: 30 }).notNull(),
     username: varchar("username", { length: 30 }).unique().notNull(),
+    about: varchar("about"),
+    phoneNumber: varchar("phone_number").unique(),
     email: varchar("email", { length: 255 }).notNull().unique(),
     passwordHash: text("password_hash").notNull(),
     lastTimeOnline: timestamp("last_time_online", {withTimezone: true}).defaultNow().notNull(),
@@ -16,11 +18,14 @@ export const userTable = pgTable("users", {
 });
 
 export interface User {
+    id: string;
     role: "user" | "admin";
     name: string;
     surname: string;
     username: string;
+    about: string | null;
     email: string;
+    phoneNumber: string | null;
     lastTimeOnline: Date;
     logoUrl: string | null;
 }
@@ -28,9 +33,11 @@ export interface User {
 export const changeUserValidateSchema = z.object({
     name: z.string().min(1).optional(),
     surname: z.string().min(1).optional(),
+    about: z.string().min(1).optional(),
     username: z.string().min(1).optional(),
     email: z.string().email().min(1).optional(),
     logoUrl: z.string().min(1).optional(),
+    phoneNumber: z.string().min(1).optional()
 })
 
 export type ChangeUser = z.infer<typeof changeUserValidateSchema>;

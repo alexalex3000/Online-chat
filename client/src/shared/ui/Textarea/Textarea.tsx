@@ -1,3 +1,5 @@
+"use client"
+
 import { TextareaHTMLAttributes } from "react";
 import styles from "./Textarea.module.scss";
 
@@ -5,14 +7,10 @@ interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     label?: string;
     placeholder?: string;
     errorMessage?: string;
+    defaultValue?: string;
 }
 
-export default function Textarea({
-                                     label,
-                                     errorMessage,
-                                     placeholder,
-                                     id,
-                                     ...props
+export default function Textarea({label, errorMessage, placeholder,defaultValue, id, ...props
                                  }: Props) {
     const textareaId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
@@ -27,6 +25,7 @@ export default function Textarea({
             <textarea
                 id={textareaId}
                 placeholder={placeholder}
+                defaultValue={defaultValue}
                 className={`${styles.textarea} ${errorMessage ? styles.error : ""}`}
                 {...props}
             />

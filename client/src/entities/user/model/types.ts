@@ -1,12 +1,13 @@
 export interface User {
-    id: string;
+    role: "user" | "admin";
     name: string;
     surname: string;
-    email: string;
-    passwordHash: string;
-    lastTimeOnline: Date;
-    logoUrl: string;
     username: string;
+    email: string;
+    about: string | null;
+    lastTimeOnline: Date;
+    logoUrl: string | null;
+    phoneNumber: string | null;
 }
 
 export interface GetUserResponse {

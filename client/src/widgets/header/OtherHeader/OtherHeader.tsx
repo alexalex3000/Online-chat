@@ -15,7 +15,7 @@ export default function OtherHeader({showButton, text}: Props) {
                 <h2 className={styles.category}>Account</h2>
                 <p className={styles.title}>{text}</p>
             </div>
-            {showButton && <UnwrapButton onClick={() => {}}>Save Changes</UnwrapButton>}
+            {showButton && <UnwrapButton form="change-user" onClick={() => {}}>Save Changes</UnwrapButton>}
         </header>
     );
 }
