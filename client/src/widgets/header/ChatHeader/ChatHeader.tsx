@@ -1,7 +1,7 @@
 import NumOfMembers from "@/features/NumOfMembers/NumOfMembers";
-import Avatar from "@/entities/user/ui/Avatar/Avatar";
 import styles from "../header.module.scss";
 import Link from "next/link";
+import UploadAvatar from "@/features/UploadAvatar/UploadAvatar";
 
 export default function ChatHeader() {
     return (
@@ -11,7 +11,7 @@ export default function ChatHeader() {
                 <NumOfMembers/>
             </div>
             <Link href="/chat/profile">
-                <Avatar />
+                <UploadAvatar/>
             </Link>
         </header>
     );

@@ -1,66 +1,51 @@
-.avatar {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--accent-primary, #3b82f6);
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: -0.02em;
-  user-select: none;
-  overflow: hidden;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.small {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: var(--accent-primary, #3b82f6);
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  user-select: none;
-  overflow: hidden;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
+.avatar,
+.small,
 .large {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
   border-radius: 50%;
   background-color: var(--accent-primary, #3b82f6);
   color: #ffffff;
-  font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
   user-select: none;
   overflow: hidden;
   flex-shrink: 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  line-height: 1; /* Убирает лишнее пространство вокруг строки */
 }
 
-@media(max-width: 574px){
-  .large{
+.avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.small {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.large {
+  width: 100px;
+  height: 100px;
+  font-size: 24px;
+
+  @media (max-width: 574px) {
     width: 70px;
     height: 70px;
   }
+}
+
+.letters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(0.5px);
 }
 
 .image {

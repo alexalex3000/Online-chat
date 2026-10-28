@@ -2,7 +2,7 @@
 
 import styles from "./Avatar.module.scss"
 import {getFirstLatters} from "@/shared/utils/getFirstLatters";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import Image from "next/image";
 
 export interface Props {
@@ -28,14 +28,14 @@ export default function Avatar({url, name = "Alexey Petrikevitch", large, clicka
 
     return (
         <div className={large ? styles.large : styles.avatar} onClick={clickable ? handleOpen : () => null}>
-            {firstLetters}
+            <span className={styles.letters}>{firstLetters}</span>
             {
                 url && (
                     <Image
-                        src={url!}
+                        src={url}
                         alt={name}
-                        width={40}
-                        height={40}
+                        fill
+                        sizes={large ? "(max-width: 574px) 70px, 100px" : "40px"}
                         className={styles.image}
                     />
                 )
