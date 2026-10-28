@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import { db } from "../db";
 import { sessionTable } from "../modules/auth/auth.schema";
 import { eq } from "drizzle-orm";
+import { wsMessage } from "./ws.message";
 
 function parseCookies(cookieHeader: string = ''): Record<string, string> {
     const list: Record<string, string> = {};
@@ -29,7 +30,7 @@ export function initWebsocket(server: http.Server) {
 
     server.on("upgrade", async (req, socket, head) => {
         try {
-            const url = new URL(req.url || "", `http://${req.headers.host}`);
+            const url = new URL(req.url || "", "http://localhost");
 
             if (url.pathname !== "/ws") {
                 socket.destroy();
@@ -112,18 +113,25 @@ export function initWebsocket(server: http.Server) {
         const ws = socket as ExtWebSocket;
         const userId = ws.userId!;
 
-        wsManager.addClient(userId, ws);
+        const isFirstConnection = wsManager.addClient(userId, ws);
 
-        wsManager.broadcast({
-            type: "USER_ONLINE",
-            data: {
-                userId: userId,
-            },
-        });
+        if (isFirstConnection) {
+            wsManager.broadcast({
+                type: "USER_ONLINE",
+                data: { userId }
+            });
+        }
+
         ws.isAlive = true;
 
         ws.on("close", () => {
-            wsManager.removeClient(userId, ws);
+            const isLastConnection = wsManager.removeClient(userId, ws);
+            if (isLastConnection) {
+                wsManager.broadcast({
+                    type: "USER_OFFLINE",
+                    data: { userId }
+                });
+            }
         });
 
         ws.on("pong", () => {
@@ -132,7 +140,17 @@ export function initWebsocket(server: http.Server) {
 
         ws.on("error", (err) => {
             console.error("WS client error:", err);
-            wsManager.removeClient(userId, ws);
+            const isLastConnection = wsManager.removeClient(userId, ws);
+            if (isLastConnection) {
+                wsManager.broadcast({
+                    type: "USER_OFFLINE",
+                    data: { userId }
+                });
+            }
+        });
+
+        ws.on("message", async (msg) => {
+            await wsMessage(userId, msg.toString());
         });
     });
 

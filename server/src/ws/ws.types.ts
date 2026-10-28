@@ -1,24 +1,17 @@
 import { WebSocket } from "ws";
 import {z} from "zod";
 
-type WsServerTypes = "NEW_MESSAGE"
+type WsTypes = "NEW_MESSAGE"
     | "USER_TYPING"
     | "USER_ONLINE"
+    | "USER_TYPING_STOP"
     | "USER_OFFLINE"
     | "ERROR"
 
-type WsClientTypes = "MESSAGE_SEND"
-    | "TYPING_START"
-    | "TYPING_STOP";
 
-export interface WsServerMessage<T = unknown> {
-    type: WsServerTypes;
-    data: T
-}
-
-export interface WsClientMessage<T = unknown> {
-    type: WsClientTypes;
-    data: T
+export interface WsMessage<T = unknown> {
+    type: WsTypes;
+    data?: T
 }
 
 export interface ExtWebSocket extends WebSocket {

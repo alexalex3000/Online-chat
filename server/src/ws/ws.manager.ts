@@ -1,28 +1,35 @@
 import { WebSocket } from "ws";
-import {WsServerMessage} from "./ws.types";
+import { WsMessage } from "./ws.types";
 
 class WsManager {
     private clients = new Map<string, Set<WebSocket>>();
 
-    addClient(userId: string, socket: WebSocket) {
-        if (!this.clients.has(userId)) {
+    addClient(userId: string, socket: WebSocket): boolean {
+        const isFirstConnection = !this.clients.has(userId);
+
+        if (isFirstConnection) {
             this.clients.set(userId, new Set());
         }
         this.clients.get(userId)!.add(socket);
+
+        return isFirstConnection;
     }
 
-    removeClient(userId: string, socket: WebSocket) {
+    removeClient(userId: string, socket: WebSocket): boolean {
         const userSockets = this.clients.get(userId);
-        if (!userSockets) return;
+        if (!userSockets) return false;
 
         userSockets.delete(socket);
 
         if (userSockets.size === 0) {
             this.clients.delete(userId);
+            return true;
         }
+
+        return false;
     }
 
-    sendToUser(userId: string, message: WsServerMessage) {
+    sendToUser(userId: string, message: WsMessage) {
         const userSockets = this.clients.get(userId);
         if (!userSockets) return;
 
@@ -34,34 +41,13 @@ class WsManager {
         });
     }
 
-    isUserOnline(userId: string): boolean {
-        const client = this.clients.get(userId);
+    sendToUsers(usersId: { id: string }[], message: WsMessage) {
+        const data = JSON.stringify(message);
 
-        if(client && client.size > 0){
-            return true;
-        }
-
-        return false;
-    }
-
-    getOnline(): number {
-        let count = 0;
-
-        for (const sockets of this.clients.values()) {
-            if (sockets.size > 0) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
-    sendToUsers(usersId: {id: string}[], message: WsServerMessage) {
-        for(const user of usersId){
+        for (const user of usersId) {
             const userSockets = this.clients.get(user.id);
-            if (!userSockets) return;
+            if (!userSockets) continue;
 
-            const data = JSON.stringify(message);
             userSockets.forEach((ws) => {
                 if (ws.readyState === WebSocket.OPEN) {
                     ws.send(data);
@@ -70,7 +56,7 @@ class WsManager {
         }
     }
 
-    broadcast(message: WsServerMessage) {
+    broadcast(message: WsMessage) {
         const data = JSON.stringify(message);
 
         this.clients.forEach((sockets) => {
@@ -80,6 +66,14 @@ class WsManager {
                 }
             });
         });
+    }
+
+    isUserOnline(userId: string): boolean {
+        return this.clients.has(userId);
+    }
+
+    getOnline(): number {
+        return this.clients.size;
     }
 }
 
