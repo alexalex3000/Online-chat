@@ -1,18 +1,30 @@
 import { create } from "zustand";
+import {z} from "zod";
 
-// Типы сообщений от клиента к серверу
-export type WsClientType = "MESSAGE_SEND" | "TYPING_START" | "TYPING_STOP";
+const validateResponseBody = z.object({
+    userId: z.string()
+})
 
-export interface WsClientMessage<T = unknown> {
-    type: WsClientType;
-    data: T;
-}
+const validateErrorBody = z.object({
+    message: z.string()
+})
 
-export type WsServerType = "USER_ONLINE" | "USER_OFFLINE" | "MESSAGE_NEW" | "USER_TYPING";
+const validateOnlineBody = z.object({
+    users: z.array(z.string())
+})
 
-export interface WsServerMessage<T = unknown> {
-    type: WsServerType;
-    data: T;
+type WsTypes = "NEW_MESSAGE"
+    | "USER_TYPING"
+    | "USER_ONLINE"
+    | "USER_TYPING_STOP"
+    | "USER_OFFLINE"
+    | "ERROR"
+    | "GET_INITIAL_INFO"
+
+
+export interface WsMessage<T = unknown> {
+    type: WsTypes;
+    data?: T
 }
 
 interface UseWebsocket {
@@ -20,18 +32,20 @@ interface UseWebsocket {
     isConnected: boolean;
     connect: () => void;
     disconnect: () => void;
-    sendMessage: (data: WsClientMessage) => void;
-    userIdTyping: string | null;
+    sendMessage: (data: WsMessage) => void;
+    userIdTyping: string[];
+    onlineUsers: string[]
 }
 
-const WEBSOCKET_URL = process.env.WS_SERVER_ENDPOINT || "ws://localhost:4200/ws";
+const WEBSOCKET_URL = process.env.NEXT_PUBLIC_WS_SERVER_ENDPOINT || "ws://localhost:4200/ws";
 
 let reconnectTimer: NodeJS.Timeout | null = null;
 
 export const useWebsocket = create<UseWebsocket>((set, get) => ({
     socket: null,
     isConnected: false,
-    userIdTyping: null,
+    userIdTyping: [],
+    onlineUsers: [],
 
     connect: () => {
         const { socket } = get();
@@ -53,18 +67,97 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
 
             console.log("WebSocket opened");
             set({ isConnected: true, socket: ws });
+
+            const {sendMessage} = get();
+
+            sendMessage({
+                type: "GET_INITIAL_INFO"
+            })
         };
 
         ws.onmessage = (event) => {
             try {
-                const message: WsServerMessage = JSON.parse(event.data);
+                const message: WsMessage = JSON.parse(event.data);
 
                 switch (message.type) {
-                    case "USER_ONLINE":
+                    case "USER_ONLINE": {
+                        const isValid = validateResponseBody.safeParse(message.data);
 
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        set((state) => ({
+                            onlineUsers: Array.from(new Set([...state.onlineUsers, isValid.data.userId]))
+                        }))
                         break;
-                    case "MESSAGE_NEW":
+                    }
+                    case "USER_OFFLINE":{
+                        const isValid = validateResponseBody.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        set((state) => ({
+                            onlineUsers: state.onlineUsers.filter((userId) => userId !== isValid.data.userId),
+                        }))
                         break;
+                    }
+                    case "USER_TYPING": {
+                        const isValid = validateResponseBody.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        set((state) => ({
+                            userIdTyping: Array.from(new Set([...state.userIdTyping, isValid.data.userId]))
+                        }))
+                        break;
+                    }
+                    case "USER_TYPING_STOP":{
+                        const isValid = validateResponseBody.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        set((state) => ({
+                            userIdTyping: state.userIdTyping.filter((userId) => userId !== isValid.data.userId),
+                        }))
+                        break;
+                    }
+
+                    case "GET_INITIAL_INFO": {
+                        const isValid = validateOnlineBody.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        set((state) => ({
+                            onlineUsers: Array.from(new Set([...state.onlineUsers, ...isValid.data.users]))
+                        }));
+                        break;
+                    }
+
+                    case "ERROR": {
+                        const isValid = validateErrorBody.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+                        console.log(isValid.data.message);
+                        break;
+                    }
+
                     default:
                         console.log("Unhandled WS message type:", message.type);
                 }
@@ -79,7 +172,7 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
 
         ws.onclose = (event) => {
             console.log(`WebSocket closed with code: ${event.code}`);
-            set({ isConnected: false, socket: null });
+            set({ isConnected: false, socket: null, onlineUsers: []});
 
             if (event.code !== 1000 && !reconnectTimer) {
                 reconnectTimer = setTimeout(() => {
@@ -103,11 +196,11 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
 
         if (socket) {
             socket.close(1000, "Socket closed manually");
-            set({ isConnected: false, socket: null });
+            set({ isConnected: false, socket: null, onlineUsers: [] });
         }
     },
 
-    sendMessage: (data: WsClientMessage) => {
+    sendMessage: (data: WsMessage) => {
         const { socket, isConnected } = get();
 
         if (socket && isConnected && socket.readyState === WebSocket.OPEN) {

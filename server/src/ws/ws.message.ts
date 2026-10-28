@@ -1,7 +1,8 @@
 import { firstValidate, WsMessage } from "./ws.types";
 import { userServiceObj } from "../modules/user/user.service";
 import { wsManager } from "./ws.manager";
-import { messageBodyValidateSchema } from "../modules/message/message.schema";
+import {messageBodyValidateSchema, messageTable} from "../modules/message/message.schema";
+import {db} from "../db";
 
 export async function wsMessage(userId: string, rawData: string) {
     let userData: WsMessage;
@@ -20,7 +21,7 @@ export async function wsMessage(userId: string, rawData: string) {
     if (!validateType.success) {
         wsManager.sendToUser(userId, {
             type: "ERROR",
-            data: { success: false, message: "Bad data type format" }
+            data: {message: "Bad data type format" }
         });
         return;
     }
@@ -41,6 +42,13 @@ export async function wsMessage(userId: string, rawData: string) {
                 return;
             }
 
+            await db
+                .insert(messageTable)
+                .values({
+                    message: validation.data.message,
+                    userId: userId,
+                })
+
             const clients = await userServiceObj.getUsersId();
 
             wsManager.sendToUsers(clients, {
@@ -59,7 +67,16 @@ export async function wsMessage(userId: string, rawData: string) {
                 }
             });
             break;
+        case "GET_INITIAL_INFO": {
+            const size = wsManager.getOnlineIds()
 
+            wsManager.sendToUser(userId, {
+                type: "GET_INITIAL_INFO",
+                data: {
+                    users: size
+                }
+            })
+        }
         default:
             console.warn(`Unknown message type: ${(userData as any).type}`);
     }

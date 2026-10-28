@@ -122,6 +122,7 @@ export function initWebsocket(server: http.Server) {
             });
         }
 
+
         ws.isAlive = true;
 
         ws.on("close", () => {

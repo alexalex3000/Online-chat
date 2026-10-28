@@ -7,6 +7,7 @@ type WsTypes = "NEW_MESSAGE"
     | "USER_TYPING_STOP"
     | "USER_OFFLINE"
     | "ERROR"
+    | "GET_INITIAL_INFO"
 
 
 export interface WsMessage<T = unknown> {
@@ -21,7 +22,12 @@ export interface ExtWebSocket extends WebSocket {
 
 export const firstValidate = z.object({
     type: z.enum([
-        "MESSAGE_SEND", "TYPING_START", "TYPING_STOP"
-    ]),
-    data: z.unknown(),
+        "NEW_MESSAGE"
+        , "USER_TYPING"
+        , "USER_ONLINE"
+        , "USER_TYPING_STOP"
+        ,"USER_OFFLINE"
+        , "ERROR"
+        ,"GET_INITIAL_INFO"]),
+    data: z.unknown().optional(),
 })

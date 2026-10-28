@@ -33,8 +33,6 @@ export class UserService{
             .from(userTable);
 
 
-        console.log(wsManager.getOnline())
-
         return {
             total: totalResult?.value ?? 0,
             onlineTotal: wsManager.getOnline(),

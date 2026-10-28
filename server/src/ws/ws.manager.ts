@@ -75,6 +75,12 @@ class WsManager {
     getOnline(): number {
         return this.clients.size;
     }
+
+    getOnlineIds(){
+        console.log(this.clients);
+
+        return Array.from(this.clients.keys());
+    }
 }
 
 export const wsManager = new WsManager();
