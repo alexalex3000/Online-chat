@@ -10,6 +10,10 @@ export class UserService{
             .from(userTable)
             .where(eq(userTable.id, id))
 
+        if(!user){
+            throw new Error("No user found");
+        }
+
         const {passwordHash, ...safeUser} = user
 
         return safeUser || null
@@ -32,6 +36,9 @@ export class UserService{
             .select({ value: count() })
             .from(userTable);
 
+        if(!totalResult){
+            throw new Error("No user found");
+        }
 
         return {
             total: totalResult?.value ?? 0,
@@ -43,6 +50,10 @@ export class UserService{
         const users = await db
             .select({id: userTable.id})
             .from(userTable)
+
+        if(!users.length){
+            throw new Error("No user found");
+        }
 
         return users
     }

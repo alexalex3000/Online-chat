@@ -1,6 +1,5 @@
 import 'server-only';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 const BACKEND_URL = process.env.SERVER_ENDPOINT || 'http://127.0.0.1:4200/api/v1';
 
@@ -37,7 +36,7 @@ export async function serverFetch<T>(
         });
     } catch (error) {
         console.error(`[serverFetch] Network error on ${url}:`, error);
-        throw new Error('Сервер временно недоступен');
+        throw new Error('Server in not available');
     }
 
     const setCookieHeaders = response.headers.getSetCookie?.() ?? [];
@@ -73,7 +72,12 @@ export async function serverFetch<T>(
     }
 
     if (response.status === 401) {
-        redirect('/login');
+        try {
+            cookieStore.delete('accessToken');
+            cookieStore.delete('refreshToken');
+        } catch {}
+
+        throw new Error('Unauthorized');
     }
 
     const text = await response.text();

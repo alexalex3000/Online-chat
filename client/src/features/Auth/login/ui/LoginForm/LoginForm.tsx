@@ -1,13 +1,13 @@
 "use client";
 
+import { useEffect, useActionState } from "react";
+import { useRouter } from "next/navigation";
 import Input from "@/shared/ui/Input/Input";
 import FullButton from "@/shared/ui/FullButton/FullButton";
 import { ChevronRight } from "lucide-react";
 import styles from "./LoginForm.module.scss";
-import {useActionState} from "react";
-import {loginDrop} from "@/entities/user/api/login";
+import { loginDrop } from "@/entities/user/api/login";
 import ErrorMessage from "@/shared/ui/ErrorMessage/ErrorMessage";
-import {redirect} from "next/navigation";
 
 interface FormErrors {
     server?: string;
@@ -22,12 +22,14 @@ interface StateType {
 }
 
 export default function LoginForm() {
+    const router = useRouter();
+
     const [state, formAction, isPending] = useActionState<StateType, FormData>(
         async (previousState, formData) => {
             const email = (formData.get("email") as string) || "";
             const password = (formData.get("password") as string) || "";
 
-            const fields = {email, password};
+            const fields = { email, password };
 
             const result = await loginDrop({
                 email,
@@ -41,9 +43,9 @@ export default function LoginForm() {
                         server:
                             typeof result.serverError === "string"
                                 ? result.serverError
-                                : "Registration failed. Please try again.",
+                                : "Login failed. Please try again.",
                     },
-                    fields
+                    fields,
                 };
             }
 
@@ -54,7 +56,7 @@ export default function LoginForm() {
                         email: result.validationErrors.email?._errors?.[0],
                         password: result.validationErrors.password?._errors?.[0],
                     },
-                    fields
+                    fields,
                 };
             }
 
@@ -65,13 +67,15 @@ export default function LoginForm() {
         { success: false }
     );
 
-    if(state.success){
-        redirect("/chat")
-    }
+    useEffect(() => {
+        if (state.success) {
+            router.push("/chat");
+        }
+    }, [state.success, router]);
 
     return (
         <div className={styles.wrap}>
-            <ErrorMessage message={state?.error?.server}/>
+            <ErrorMessage message={state?.error?.server} />
             <form className={styles.form} action={formAction}>
                 <Input
                     type="email"
@@ -89,10 +93,11 @@ export default function LoginForm() {
                     defaultValue={state?.fields?.password}
                     errorMessage={state.error?.password}
                 />
-                <FullButton>
-                <span className={styles.buttonContent}>
-                    Log In <ChevronRight size={18} strokeWidth={2} />
-                </span>
+                <FullButton disabled={isPending}>
+                    <span className={styles.buttonContent}>
+                        {isPending ? "Logging in..." : "Log In"}{" "}
+                        <ChevronRight size={18} strokeWidth={2} />
+                    </span>
                 </FullButton>
             </form>
         </div>

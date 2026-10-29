@@ -1,13 +1,13 @@
 "use client";
 
+import { useEffect, useActionState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./RegisterForm.module.scss";
 import Input from "@/shared/ui/Input/Input";
 import FullButton from "@/shared/ui/FullButton/FullButton";
-import {ChevronRight} from "lucide-react";
-import {useActionState} from "react";
-import {registerDrop} from "@/entities/user/api/register";
+import { ChevronRight } from "lucide-react";
+import { registerDrop } from "@/entities/user/api/register";
 import ErrorMessage from "@/shared/ui/ErrorMessage/ErrorMessage";
-import {redirect} from "next/navigation";
 
 interface FormErrors {
     server?: string;
@@ -26,6 +26,8 @@ interface StateType {
 }
 
 export default function RegisterForm() {
+    const router = useRouter();
+
     const [state, formAction, isPending] = useActionState<StateType, FormData>(
         async (previousState, formData) => {
             const name = (formData.get("name") as string) || "";
@@ -35,7 +37,7 @@ export default function RegisterForm() {
             const password = (formData.get("password") as string) || "";
             const confirmPassword = (formData.get("confirm_password") as string) || "";
 
-            const fields = {name, surname, username, email, password, confirmPassword};
+            const fields = { name, surname, username, email, password, confirmPassword };
 
             const result = await registerDrop({
                 name,
@@ -55,7 +57,7 @@ export default function RegisterForm() {
                                 ? result.serverError
                                 : "Registration failed. Please try again.",
                     },
-                    fields
+                    fields,
                 };
             }
 
@@ -70,7 +72,7 @@ export default function RegisterForm() {
                         password: result.validationErrors.password?._errors?.[0],
                         confirmPassword: result.validationErrors.confirmPassword?._errors?.[0],
                     },
-                    fields
+                    fields,
                 };
             }
 
@@ -78,16 +80,18 @@ export default function RegisterForm() {
                 success: true,
             };
         },
-        {success: false}
+        { success: false }
     );
 
-    if(state.success){
-        redirect("/chat")
-    }
+    useEffect(() => {
+        if (state.success) {
+            router.push("/chat");
+        }
+    }, [state.success, router]);
 
     return (
         <div className={styles.wrap}>
-            <ErrorMessage message={state?.error?.server}/>
+            <ErrorMessage message={state?.error?.server} />
             <form className={styles.form} action={formAction}>
                 <div className={styles.nameGroup}>
                     <div className={styles.row}>
@@ -144,10 +148,10 @@ export default function RegisterForm() {
                 />
 
                 <FullButton disabled={isPending}>
-                <span className={styles.buttonContent}>
-                    {isPending ? "Registering..." : "Register"}
-                    <ChevronRight size={18} strokeWidth={2}/>
-                </span>
+                    <span className={styles.buttonContent}>
+                        {isPending ? "Registering..." : "Register"}
+                        <ChevronRight size={18} strokeWidth={2} />
+                    </span>
                 </FullButton>
             </form>
         </div>

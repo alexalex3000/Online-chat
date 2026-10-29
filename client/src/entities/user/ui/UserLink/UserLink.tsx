@@ -14,12 +14,14 @@ interface Props {
 export default async function UserLink({large}: Props) {
     const info = await userApi.getUser() as GetUserResponse
 
+    const fullName = [info.user?.name, info.user?.surname].filter(Boolean).join(" ") || undefined;
+
     if (large) {
         return (
             <div className={styles.containerLarge}>
                 <Avatar
-                    name={`${info?.user?.name} ${info?.user?.surname}`}
-                    url={info?.user?.logoUrl}
+                    name={fullName}
+                    url={info?.user?.logoUrl ?? undefined}
                     large />
                 <div className={styles?.userInfo}>
                     <Name large name={`${info?.user?.name} ${info?.user?.surname}`}/>
@@ -33,8 +35,8 @@ export default async function UserLink({large}: Props) {
         <Section small>
             <div className={styles.container}>
                 <Avatar
-                    name={`${info?.user?.name} ${info?.user?.surname}`}
-                    url={info?.user?.logoUrl}
+                    name={fullName}
+                    url={info?.user?.logoUrl ?? undefined}
                 />
                 <div className={styles?.userInfo}>
                     <Name name={`${info?.user?.name} ${info?.user?.surname}`}/>

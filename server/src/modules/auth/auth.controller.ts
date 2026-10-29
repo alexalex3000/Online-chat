@@ -16,7 +16,7 @@ const ACCESS_COOKIE_OPTIONS = {
 const REFRESH_COOKIE_OPTIONS = {
     httpOnly: true,
     secure: IS_PROD,
-    sameSite: "strict" as const,
+    sameSite: "lax" as const,
     maxAge: 30 * 24 * 60 * 60 * 1000,
     path: "/",
 };
@@ -44,7 +44,6 @@ export class AuthController {
             res.cookie("accessToken", result.tokens.accessToken, ACCESS_COOKIE_OPTIONS);
             res.cookie("refreshToken", result.tokens.refreshToken, REFRESH_COOKIE_OPTIONS);
 
-            console.log(result);
 
             return res.status(200).json({
                 success: true,
@@ -59,6 +58,13 @@ export class AuthController {
         try {
             const { refreshToken } = req.cookies;
 
+            if (!refreshToken) {
+                return res.status(401).json({
+                    success: false,
+                    message: "No refresh token provided"
+                });
+            }
+
             const result = await authServiceObj.refresh(refreshToken);
 
             res.cookie("accessToken", result.tokens.accessToken, ACCESS_COOKIE_OPTIONS);
@@ -69,7 +75,13 @@ export class AuthController {
                 user: result.user,
             });
         } catch (e) {
-            next(e);
+            res.clearCookie("accessToken", { path: "/" });
+            res.clearCookie("refreshToken", { path: "/" });
+
+            return res.status(401).json({
+                success: false,
+                message: e instanceof Error ? e.message : "Invalid or expired session"
+            });
         }
     }
 

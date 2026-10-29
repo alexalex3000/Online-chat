@@ -31,11 +31,14 @@ CREATE TABLE "users" (
 	"name" varchar(30) NOT NULL,
 	"surname" varchar(30) NOT NULL,
 	"username" varchar(30) NOT NULL,
+	"about" varchar,
+	"phone_number" varchar,
 	"email" varchar(255) NOT NULL,
 	"password_hash" text NOT NULL,
 	"last_time_online" timestamp with time zone DEFAULT now() NOT NULL,
 	"logo_url" text,
 	CONSTRAINT "users_username_unique" UNIQUE("username"),
+	CONSTRAINT "users_phone_number_unique" UNIQUE("phone_number"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint

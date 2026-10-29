@@ -1,5 +1,5 @@
 {
-  "id": "2d295e09-3b7a-470b-a817-df354b233817",
+  "id": "d5f0b356-2570-47ce-917d-1fef5e0e1e49",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -236,6 +236,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "about": {
+          "name": "about",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "email": {
           "name": "email",
           "type": "varchar(255)",
@@ -271,6 +283,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "username"
+          ]
+        },
+        "users_phone_number_unique": {
+          "name": "users_phone_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone_number"
           ]
         },
         "users_email_unique": {

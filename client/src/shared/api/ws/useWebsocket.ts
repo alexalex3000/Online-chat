@@ -16,7 +16,6 @@ const validateOnlineBody = z.object({
 type WsTypes = "NEW_MESSAGE"
     | "USER_TYPING"
     | "USER_ONLINE"
-    | "USER_TYPING_STOP"
     | "USER_OFFLINE"
     | "ERROR"
     | "GET_INITIAL_INFO"
@@ -119,20 +118,6 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                         }))
                         break;
                     }
-                    case "USER_TYPING_STOP":{
-                        const isValid = validateResponseBody.safeParse(message.data);
-
-                        if(!isValid.success){
-                            console.log(isValid.error);
-                            break
-                        }
-
-                        set((state) => ({
-                            userIdTyping: state.userIdTyping.filter((userId) => userId !== isValid.data.userId),
-                        }))
-                        break;
-                    }
-
                     case "GET_INITIAL_INFO": {
                         const isValid = validateOnlineBody.safeParse(message.data);
 

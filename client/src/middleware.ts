@@ -5,9 +5,27 @@ const BACKEND_URL = process.env.SERVER_ENDPOINT || 'http://localhost:4200/api/v1
 export async function middleware(request: NextRequest) {
     const refreshToken = request.cookies.get('refreshToken')?.value;
     const accessToken = request.cookies.get('accessToken')?.value;
+    const { pathname } = request.nextUrl;
+
+    const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/register');
+    const hasTokens = Boolean(accessToken || refreshToken);
+
+    if (isAuthPage) {
+        if (hasTokens) {
+            return NextResponse.redirect(new URL('/chat', request.url));
+        }
+        return NextResponse.next();
+    }
+
+    const redirectToLogin = () => {
+        const redirectResponse = NextResponse.redirect(new URL('/login', request.url));
+        redirectResponse.cookies.set('accessToken', '', { path: '/', maxAge: 0 });
+        redirectResponse.cookies.set('refreshToken', '', { path: '/', maxAge: 0 });
+        return redirectResponse;
+    };
 
     if (!accessToken && !refreshToken) {
-        return NextResponse.redirect(new URL('/login', request.url));
+        return redirectToLogin();
     }
 
     if (!accessToken && refreshToken) {
@@ -57,15 +75,12 @@ export async function middleware(request: NextRequest) {
             console.error('[Middleware] Refresh fetch failed:', error);
         }
 
-        const redirectResponse = NextResponse.redirect(new URL('/login', request.url));
-        redirectResponse.cookies.delete('accessToken');
-        redirectResponse.cookies.delete('refreshToken');
-        return redirectResponse;
+        return redirectToLogin();
     }
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/chat/:path*', '/profile/:path*'],
+    matcher: ['/chat/:path*', '/profile/:path*', '/login', '/register'],
 };

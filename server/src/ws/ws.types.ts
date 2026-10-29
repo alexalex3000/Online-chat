@@ -4,7 +4,6 @@ import {z} from "zod";
 type WsTypes = "NEW_MESSAGE"
     | "USER_TYPING"
     | "USER_ONLINE"
-    | "USER_TYPING_STOP"
     | "USER_OFFLINE"
     | "ERROR"
     | "GET_INITIAL_INFO"
@@ -25,7 +24,6 @@ export const firstValidate = z.object({
         "NEW_MESSAGE"
         , "USER_TYPING"
         , "USER_ONLINE"
-        , "USER_TYPING_STOP"
         ,"USER_OFFLINE"
         , "ERROR"
         ,"GET_INITIAL_INFO"]),

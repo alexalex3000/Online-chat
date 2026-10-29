@@ -21,12 +21,23 @@ const registerValidateSchema = z
 export const loginDrop = actionClient
     .schema(registerValidateSchema)
     .action(async ({parsedInput}) => {
-        const {email, password} = parsedInput;
+        try{
+            const {email, password} = parsedInput;
 
-        const result = await serverFetch("/auth/login", {
-            method: "POST",
-            body: JSON.stringify({email, password}),
-        })
+            const result = await serverFetch("/auth/login", {
+                method: "POST",
+                body: JSON.stringify({email, password}),
+            })
 
-        return result
+            console.log(result)
+
+            return result
+        } catch (e){
+            console.log(e)
+
+            return {
+                success: false,
+                error: e
+            }
+        }
     })

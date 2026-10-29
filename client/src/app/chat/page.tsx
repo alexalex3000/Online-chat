@@ -3,6 +3,7 @@ import styles from "./page.module.scss"
 import ChatMessages from "@/widgets/ChatMessages/ChatMessages";
 import UserPageWrapper from "@/entities/user/ui/UserPageWrapper/UserPageWrapper";
 import UserPage from "@/entities/user/ui/UserPage/UserPage";
+import ChatInput from "@/features/ChatInput/ChatInput";
 
 export default function ChatPage(){
     return (
@@ -11,6 +12,7 @@ export default function ChatPage(){
             <div className={styles.main}>
                 <ChatMessages/>
                 <UserPageWrapper UserPage={<UserPage/>}/>
+                <ChatInput/>
             </div>
         </div>
     )

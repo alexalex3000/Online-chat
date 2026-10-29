@@ -59,7 +59,8 @@ export async function wsMessage(userId: string, rawData: string) {
         }
 
         case "USER_TYPING":
-        case "USER_TYPING_STOP":
+            console.log("user typing")
+
             wsManager.broadcast({
                 type: userData.type,
                 data: {
@@ -76,6 +77,7 @@ export async function wsMessage(userId: string, rawData: string) {
                     users: size
                 }
             })
+            break
         }
         default:
             console.warn(`Unknown message type: ${(userData as any).type}`);

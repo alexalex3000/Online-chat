@@ -77,8 +77,6 @@ class WsManager {
     }
 
     getOnlineIds(){
-        console.log(this.clients);
-
         return Array.from(this.clients.keys());
     }
 }
