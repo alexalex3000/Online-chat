@@ -4,6 +4,7 @@ import styles from "./Avatar.module.scss"
 import {getFirstLatters} from "@/shared/utils/getFirstLatters";
 import {usePathname, useRouter} from "next/navigation";
 import Image from "next/image";
+import {useUserStore} from "@/entities/user/model/user-store";
 
 export interface Props {
     url?: string

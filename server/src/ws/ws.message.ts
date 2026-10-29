@@ -59,7 +59,8 @@ export async function wsMessage(userId: string, rawData: string) {
         }
 
         case "USER_TYPING":
-            console.log("user typing")
+
+            console.log("user typing recieved")
 
             wsManager.broadcast({
                 type: userData.type,

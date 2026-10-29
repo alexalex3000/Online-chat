@@ -113,9 +113,12 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                             break
                         }
 
+                        console.log("RECIEVED FROM SERVER: USER TYPING");
+
                         set((state) => ({
                             userIdTyping: Array.from(new Set([...state.userIdTyping, isValid.data.userId]))
                         }))
+
                         break;
                     }
                     case "GET_INITIAL_INFO": {

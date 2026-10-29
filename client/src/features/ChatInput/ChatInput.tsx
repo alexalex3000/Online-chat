@@ -1,6 +1,6 @@
 "use client"
 
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, useRef, useState} from 'react';
 import styles from './ChatInput.module.scss';
 import {Send} from "lucide-react";
 import {useWebsocket} from "@/shared/api/ws/useWebsocket";
@@ -10,7 +10,7 @@ export default function ChatInput() {
     const userIdTyping = useWebsocket(state => state.userIdTyping);
     const [value, setValue] = useState<string>('');
     const lastTypingTimeRef = useRef<number>(0);
-
+    const isConnected = useWebsocket(state => state.isConnected);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -36,10 +36,11 @@ export default function ChatInput() {
                     value={value}
                     placeholder="Write a message..."
                     className={styles.input}
+
                 />
             </div>
 
-            <button type="button" aria-label="Send" className={styles.sendButton}>
+            <button disabled={!isConnected} type="button" aria-label="Send" className={styles.sendButton}>
                 <Send className={styles.sendIcon}/>
             </button>
         </form>

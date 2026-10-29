@@ -2,20 +2,25 @@ import Sidebar from "@/widgets/Sidebar/Sidebar";
 import styles from "./layout.module.scss"
 import SidebarPc from "@/widgets/Sidebar/pc/SidebarPc";
 import SidebarMobile from "@/widgets/Sidebar/mobile/SidebarMobile";
-import SocketProvider from "@/shared/lib/SocketProvider";
+import SocketProvider from "@/shared/providers/SocketProvider";
 import {userApi} from "@/entities/user/api/user.api";
 import {redirect} from "next/navigation";
 import {isRedirectError} from "next/dist/client/components/redirect-error";
+import {UserProvider} from "@/shared/providers/UserApiProvider";
 
 interface Props{
     children?: React.ReactNode
 }
 
 export default async function ChatLayout({children}: Props) {
-    try {
-        const user = await userApi.getUser();
+    let user = null;
 
-        if (!user) {
+    try {
+        const response = await userApi.getUser();
+
+        if (response?.success && response.user) {
+            user = response.user;
+        } else {
             redirect("/login");
         }
     } catch (error) {
@@ -23,15 +28,18 @@ export default async function ChatLayout({children}: Props) {
             throw error;
         }
 
+        console.error("[ChatLayout] Failed to load user:", error);
         redirect("/login");
     }
 
     return (
-        <SocketProvider>
-            <div className={styles.layout}>
-                <Sidebar pc={<SidebarPc/>} mobile={<SidebarMobile/>}/>
-                {children}
-            </div>
-        </SocketProvider>
+        <UserProvider user={user}>
+            <SocketProvider>
+                <div className={styles.layout}>
+                    <Sidebar pc={<SidebarPc/>} mobile={<SidebarMobile/>}/>
+                    {children}
+                </div>
+            </SocketProvider>
+        </UserProvider>
     )
 }

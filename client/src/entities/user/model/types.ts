@@ -1,4 +1,5 @@
 export interface User {
+    id?:string;
     role: "user" | "admin";
     name: string;
     surname: string;
