@@ -34,6 +34,7 @@ export async function serverFetch<T>(
             headers,
             cache: options.cache || 'no-store',
         });
+
     } catch (error) {
         console.error(`[serverFetch] Network error on ${url}:`, error);
         throw new Error('Server in not available');
@@ -82,6 +83,8 @@ export async function serverFetch<T>(
 
     const text = await response.text();
     const result = text ? JSON.parse(text) : null;
+
+    console.log(result);
 
     if (!response.ok) {
         throw new Error(result?.message || `Request failed with status ${response.status}`);

@@ -4,6 +4,12 @@ import {z} from "zod";
 import {actionClient} from "@/shared/lib/safe-action";
 import {serverFetch} from "@/shared/api/serverFetch";
 
+interface Response {
+    success: boolean;
+    error?: Error;
+    user?: any
+}
+
 const registerValidateSchema = z
     .object({
         email: z
@@ -20,22 +26,17 @@ const registerValidateSchema = z
 
 export const loginDrop = actionClient
     .schema(registerValidateSchema)
-    .action(async ({parsedInput}) => {
-        try{
-            const {email, password} = parsedInput;
+    .action(async ({ parsedInput }) => {
+        const { email, password } = parsedInput;
 
-            const result = await serverFetch("/auth/login", {
-                method: "POST",
-                body: JSON.stringify({email, password}),
-            })
+        const result = (await serverFetch("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+        })) as Response;
 
-            return result
-        } catch (e){
-            console.log(e)
-
-            return {
-                success: false,
-                error: e
-            }
+        if (!result?.success) {
+            throw new Error(result?.error?.message || "Cant find user with this email");
         }
-    })
+
+        return result;
+    });

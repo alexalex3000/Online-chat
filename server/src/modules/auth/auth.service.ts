@@ -1,7 +1,7 @@
 import {LoginData, RegisterData, TokenPayload} from "./auth.schema";
 import {db} from "../../db";
 import {userTable} from "../user/user.schema";
-import {eq} from "drizzle-orm";
+import {eq, or} from "drizzle-orm";
 import argon2 from "argon2";
 import {config} from "dotenv";
 import {tokenServiceObj} from "./token.service";
@@ -16,10 +16,13 @@ export class AuthService {
         const [userExist] = await db
             .select()
             .from(userTable)
-            .where(eq(userTable.email, userData.email))
+            .where(or(eq(userTable.email, userData.email), eq(userTable.username, userData.username)));
 
-        if(userExist){
-            throw new Error("User with email already exists");
+        if (userExist.username === userData.username) {
+            throw new Error("A user with this username already exists");
+        }
+        if (userExist.email === userData.email) {
+            throw new Error("A user with this email already exists");
         }
 
         const passwordHashCoded = await argon2.hash(userData.password, {
