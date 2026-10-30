@@ -20,4 +20,8 @@ export const messageBodyValidateSchema = z.object({
     message: z.string().min(1),
 })
 
+export const userTypingValidateSchema = z.object({
+    userFullname: z.string().min(1)
+})
+
 export type MessageBody = z.infer<typeof messageBodyValidateSchema>

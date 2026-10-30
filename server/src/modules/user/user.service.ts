@@ -14,7 +14,7 @@ export class UserService{
             throw new Error("No user found");
         }
 
-        const {passwordHash, ...safeUser} = user
+        const {passwordHash, ...safeUser} = user;
 
         return safeUser || null
     }
@@ -58,24 +58,20 @@ export class UserService{
         return users
     }
 
-    async getUsers(){
-        const users = await db
+    async getUserById(id: string){
+        const [user] = await db
             .select({
-                id: userTable.id,
                 name: userTable.name,
                 surname: userTable.surname,
-                email: userTable.email,
-                username: userTable.username,
-                logoUrl: userTable.logoUrl
             })
             .from(userTable)
+            .where(eq(userTable.id, id))
 
-        const result = users.map(user => ({
-            ...user,
-            online: wsManager.isUserOnline(user.id)
-        }))
+        if(!user){
+            throw new Error("No user found");
+        }
 
-        return result || []
+        return user || null;
     }
 }
 

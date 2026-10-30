@@ -4,13 +4,14 @@ import React, {ChangeEvent, useRef, useState} from 'react';
 import styles from './ChatInput.module.scss';
 import {Send} from "lucide-react";
 import {useWebsocket} from "@/shared/api/ws/useWebsocket";
+import {useUserStore} from "@/entities/user/model/user-store";
 
 export default function ChatInput() {
     const sendMessage = useWebsocket(state => state.sendMessage);
-    const userIdTyping = useWebsocket(state => state.userIdTyping);
     const [value, setValue] = useState<string>('');
     const lastTypingTimeRef = useRef<number>(0);
     const isConnected = useWebsocket(state => state.isConnected);
+    const user = useUserStore(state => state.user);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -21,7 +22,12 @@ export default function ChatInput() {
             const now = Date.now();
 
             if(now - lastTypingTimeRef.current > 2000) {
-                sendMessage({type: "USER_TYPING"})
+                sendMessage({
+                    type: "USER_TYPING",
+                    data: {
+                        userFullname: `${user?.name} ${user?.surname}`,
+                    }
+                })
                 lastTypingTimeRef.current = now;
             }
         }

@@ -22,7 +22,5 @@ export const changeUserDrop = actionClient
             body: JSON.stringify(parsedInput)
         })
 
-        console.log(result)
-
         return result
     })

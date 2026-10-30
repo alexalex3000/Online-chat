@@ -28,6 +28,10 @@
       text-overflow: ellipsis;
     }
   }
+
+  @media(max-width: 500px){
+    height: 80px;
+  }
 }
 
 .category {
@@ -46,4 +50,14 @@
   letter-spacing: -0.01em;
   color: var(--text-primary, #ffffff);
   margin: 0;
+}
+
+.userInfo{
+  display: flex;
+  gap: 8px;
+
+  @media(max-width: 500px) {
+    flex-direction: column;
+    gap: 4px;
+  }
 }

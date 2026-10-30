@@ -40,4 +40,8 @@ export const changeUserValidateSchema = z.object({
     phoneNumber: z.string().min(1).optional()
 })
 
+export const getUserByIdValidateSchema = z.object({
+    id: z.string().min(1),
+})
+
 export type ChangeUser = z.infer<typeof changeUserValidateSchema>;

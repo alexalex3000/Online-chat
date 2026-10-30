@@ -1,8 +1,14 @@
 import { create } from "zustand";
-import {z} from "zod";
+import {string, z} from "zod";
+import {serverFetch} from "@/shared/api/serverFetch";
 
 const validateResponseBody = z.object({
     userId: z.string()
+})
+
+const validateUserTypingBody = z.object({
+    userId: z.string(),
+    userFullname: z.string().min(1)
 })
 
 const validateErrorBody = z.object({
@@ -32,7 +38,10 @@ interface UseWebsocket {
     connect: () => void;
     disconnect: () => void;
     sendMessage: (data: WsMessage) => void;
-    userIdTyping: string[];
+    usersTyping: {
+        id: string;
+        fullname: string;
+    }[];
     onlineUsers: string[]
 }
 
@@ -43,7 +52,7 @@ let reconnectTimer: NodeJS.Timeout | null = null;
 export const useWebsocket = create<UseWebsocket>((set, get) => ({
     socket: null,
     isConnected: false,
-    userIdTyping: [],
+    usersTyping: [],
     onlineUsers: [],
 
     connect: () => {
@@ -74,7 +83,7 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
             })
         };
 
-        ws.onmessage = (event) => {
+        ws.onmessage = async (event) => {
             try {
                 const message: WsMessage = JSON.parse(event.data);
 
@@ -106,17 +115,15 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                         break;
                     }
                     case "USER_TYPING": {
-                        const isValid = validateResponseBody.safeParse(message.data);
+                        const isValid = validateUserTypingBody.safeParse(message.data);
 
                         if(!isValid.success){
                             console.log(isValid.error);
                             break
                         }
 
-                        console.log("RECIEVED FROM SERVER: USER TYPING");
-
                         set((state) => ({
-                            userIdTyping: Array.from(new Set([...state.userIdTyping, isValid.data.userId]))
+                            usersTyping: Array.from(new Set([...state.usersTyping, {id: isValid.data.userId, fullname: isValid.data.userFullname}]))
                         }))
 
                         break;

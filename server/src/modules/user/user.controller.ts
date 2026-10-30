@@ -19,25 +19,18 @@ export class UserController {
         }
     }
 
-    async getUsers(req: AuthenticatedRequest<{ id: string }>, res: Response, next: NextFunction) {
-        try {
-            const { id } = req.params;
-            const currentUserId = req.user!.id;
 
-            if (currentUserId !== id) {
-                return res.status(403).json({
-                    success: false,
-                    message: "Forbidden: Access denied to this resource"
-                });
-            }
+    async getUserById(req: AuthenticatedRequest<{id: string}>, res: Response, next: NextFunction) {
+        try{
+            const userId = req.params.id;
 
-            const result = await userServiceObj.getUsers();
+            const result = await userServiceObj.getUserById(userId);
 
             return res.status(200).json({
                 success: true,
-                users: result
+                user: result
             });
-        } catch (e) {
+        } catch (e){
             next(e);
         }
     }

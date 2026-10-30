@@ -1,7 +1,7 @@
 import { firstValidate, WsMessage } from "./ws.types";
 import { userServiceObj } from "../modules/user/user.service";
 import { wsManager } from "./ws.manager";
-import {messageBodyValidateSchema, messageTable} from "../modules/message/message.schema";
+import {messageBodyValidateSchema, messageTable, userTypingValidateSchema} from "../modules/message/message.schema";
 import {db} from "../db";
 
 export async function wsMessage(userId: string, rawData: string) {
@@ -59,13 +59,25 @@ export async function wsMessage(userId: string, rawData: string) {
         }
 
         case "USER_TYPING":
+            const validation = userTypingValidateSchema.safeParse(userData.data);
 
-            console.log("user typing recieved")
+            if (!validation.success) {
+                wsManager.sendToUser(userId, {
+                    type: "ERROR",
+                    data: {
+                        success: false,
+                        message: "Bad data format",
+                        errors: validation.error.format()
+                    }
+                });
+                return;
+            }
 
             wsManager.broadcast({
                 type: userData.type,
                 data: {
-                    userId: userId
+                    userId: userId,
+                    userFullname: validation.data.userFullname,
                 }
             });
             break;

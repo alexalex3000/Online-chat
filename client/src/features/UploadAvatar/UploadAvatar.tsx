@@ -6,8 +6,10 @@ export default async function UploadAvatar(){
 
     const fullName = [userInfo.user?.name, userInfo.user?.surname].filter(Boolean).join(" ") || undefined;
 
-    <Avatar
-        name={fullName}
-        url={userInfo.user?.logoUrl || undefined}
-    />
+    return (
+        <Avatar
+            name={fullName}
+            url={userInfo.user?.logoUrl || undefined}
+        />
+    )
 }

@@ -29,8 +29,6 @@ export const loginDrop = actionClient
                 body: JSON.stringify({email, password}),
             })
 
-            console.log(result)
-
             return result
         } catch (e){
             console.log(e)
