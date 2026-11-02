@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import "@/app/globals.css";
+import AlertWindow from "@/features/AlertWindow/AlertWindow";
 
 const inter = Inter({
     subsets: ["latin", "cyrillic"],
@@ -23,7 +24,8 @@ export default async function RootLayout({
     return (
         <html lang="ru" data-theme={theme} className={inter.variable} suppressHydrationWarning>
         <body className={inter.className} suppressHydrationWarning>
-        {children}
+            {children}
+            <AlertWindow/>
         </body>
         </html>
     );

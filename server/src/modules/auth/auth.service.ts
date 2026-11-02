@@ -18,10 +18,10 @@ export class AuthService {
             .from(userTable)
             .where(or(eq(userTable.email, userData.email), eq(userTable.username, userData.username)));
 
-        if (userExist.username === userData.username) {
+        if (userExist?.username === userData?.username) {
             throw new Error("A user with this username already exists");
         }
-        if (userExist.email === userData.email) {
+        if (userExist?.email === userData?.email) {
             throw new Error("A user with this email already exists");
         }
 

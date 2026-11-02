@@ -205,3 +205,5 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
         }
     },
 }));
+
+//TODO обработать перезагрузку сокета

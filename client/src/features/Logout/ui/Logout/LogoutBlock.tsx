@@ -7,15 +7,13 @@ import Button from "@/shared/ui/Button/Button";
 import {logOut} from "@/entities/user/api/log-out";
 import {useWebsocket} from "@/shared/api/ws/useWebsocket";
 import {useUserStore} from "@/entities/user/model/user-store";
+import {useAlertStore} from "@/features/AlertWindow/model/alert-store";
 
-interface Props {
-    onLogout?: () => void;
-    onDeleteAccount?: () => void;
-}
-
-export default function LogoutBlock({onLogout, onDeleteAccount}: Props) {
+export default function LogoutBlock() {
     const disconnect = useWebsocket(state => state.disconnect);
     const setUser = useUserStore(state => state.setUser);
+    const setMessage = useAlertStore(state => state.setValue)
+    const setType = useAlertStore(state => state.setType)
 
     const handleLogout = async () => {
         try{
@@ -24,6 +22,9 @@ export default function LogoutBlock({onLogout, onDeleteAccount}: Props) {
             disconnect()
 
             setUser(null)
+
+            setMessage("Successfully logged out")
+            setType("success")
         } catch (e){
             console.error(e);
         }
