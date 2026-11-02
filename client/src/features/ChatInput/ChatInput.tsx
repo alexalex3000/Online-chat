@@ -33,6 +33,8 @@ export default function ChatInput() {
                 message: value.trim()
             }
         })
+
+        setValue('')
     }
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
