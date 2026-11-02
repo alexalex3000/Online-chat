@@ -1,3 +1,5 @@
+"use client"
+
 import {User} from "@/entities/user/model/types";
 import {MessageStatusType} from "@/entities/message/model/types";
 import Avatar from "@/entities/user/ui/Avatar/Avatar";

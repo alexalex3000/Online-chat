@@ -11,14 +11,11 @@ export class MessageService {
         return resData ?? null
     }
 
-    async writeMessage(body: MessageBody, userId: string){
-        const [resData] = await db
-            .insert(messageTable)
-            .values({
-                message: body.message,
-                userId: userId,
-            })
-            .returning()
+    async getPart() {
+        const resData = await db
+            .select()
+            .from(messageTable)
+            .limit(50)
 
         return resData ?? null
     }

@@ -6,7 +6,7 @@ import Status from "@/entities/message/ui/Status/Status";
 import { MessageStatusType } from "@/entities/message/model/types";
 import Name from "@/entities/user/ui/Name/Name";
 import Username from "@/entities/user/ui/Username/Username";
-import { useMessageStore } from "@/entities/message/model/message-store";
+import { useMessageStore } from "@/entities/message/model/message-settings-store";
 import { useEffect, useRef, useState } from "react";
 import MessageActions from "@/entities/message/ui/MessageActions/MessageActions";
 

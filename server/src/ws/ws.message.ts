@@ -42,18 +42,25 @@ export async function wsMessage(userId: string, rawData: string) {
                 return;
             }
 
-            await db
+            const [newMessage] = await db
                 .insert(messageTable)
                 .values({
                     message: validation.data.message,
                     userId: userId,
                 })
+                .returning()
+
+            const user = await userServiceObj.getUser(userId);
 
             const clients = await userServiceObj.getUsersId();
 
             wsManager.sendToUsers(clients, {
                 type: "NEW_MESSAGE",
-                data: validation.data
+                data: {
+                    user: user,
+                    message: newMessage,
+                    tempId: validation.data.tempId
+                }
             });
             break;
         }

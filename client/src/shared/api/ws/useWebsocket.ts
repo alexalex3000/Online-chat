@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import {string, z} from "zod";
-import {serverFetch} from "@/shared/api/serverFetch";
+import { z} from "zod";
+import {useMessagesStore} from "@/entities/message/model/messages-store";
+import {User} from "@/entities/user/model/types";
 
 const validateResponseBody = z.object({
     userId: z.string()
@@ -17,6 +18,30 @@ const validateErrorBody = z.object({
 
 const validateOnlineBody = z.object({
     users: z.array(z.string())
+})
+
+const validateNewMessageBody = z.object({
+    tempId: z.string().uuid().optional(),
+
+    user: z.object({
+        id: z.string().uuid(),
+        role: z.enum(["user", "admin"]),
+        name: z.string(),
+        surname: z.string(),
+        username: z.string(),
+        about: z.string().nullable(),
+        phoneNumber: z.string().nullable(),
+        email: z.string().email(),
+        lastTimeOnline: z.string().or(z.date()),
+        logoUrl: z.string().nullable().optional(),
+    }),
+
+    message: z.object({
+        id: z.string().uuid(),
+        message: z.string().min(1),
+        date: z.string().or(z.date()),
+        userId: z.string().uuid(),
+    }),
 })
 
 type WsTypes = "NEW_MESSAGE"
@@ -88,6 +113,41 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                 const message: WsMessage = JSON.parse(event.data);
 
                 switch (message.type) {
+                    case "NEW_MESSAGE": {
+                        const isValid = validateNewMessageBody.safeParse(message.data);
+                        const addMessage = useMessagesStore.getState().addMessage;
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+
+                            break
+                        }
+
+                        const messages = useMessagesStore.getState().messages
+
+                        const isMessageExist = messages.some((message) => message.id === isValid.data.tempId)
+
+                        if(isValid.data.tempId && isMessageExist){
+                            useMessagesStore.getState().changeStatusSuccess(isValid.data.tempId, isValid.data.user.id);
+                            break
+                        }
+                        else{
+                            const isExist = messages.some((message) => message.id === isValid.data.message.id)
+
+                            if(!isExist){
+                                addMessage({
+                                    id: isValid.data.message.id,
+                                    message: isValid.data.message.message,
+                                    status: "success",
+                                    owner: isValid.data.user as User,
+                                    date: new Date(isValid.data.message.date),
+                                });
+                            }
+                        }
+
+                        break;
+                    }
+
                     case "USER_ONLINE": {
                         const isValid = validateResponseBody.safeParse(message.data);
 

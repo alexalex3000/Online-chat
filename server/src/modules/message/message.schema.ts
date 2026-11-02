@@ -17,6 +17,7 @@ export const messageQueryValidateSchema = z.object({
 });
 
 export const messageBodyValidateSchema = z.object({
+    tempId: z.string().uuid(),
     message: z.string().min(1),
 })
 
