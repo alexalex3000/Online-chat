@@ -3,56 +3,61 @@
 import { useEffect, useState, useRef } from "react";
 import { CheckCircle2, AlertCircle, Info, X } from "lucide-react";
 import styles from "./AlertWindow.module.scss";
+import { useAlertStore } from "@/features/AlertWindow/model/alert-store";
 
 type AlertType = "success" | "error" | "info";
 
 interface Props {
-    message?: string;
-    type?: AlertType;
     duration?: number;
     onClose?: () => void;
 }
 
-export default function AlertWindow({message, type = "info", duration = 4000, onClose,}: Props) {
-    const [isVisible, setIsVisible] = useState(false);
+export default function AlertWindow({ duration = 4000, onClose }: Props) {
+    const value = useAlertStore((state) => state.value);
+    const setValue = useAlertStore((state) => state.setValue);
+    const type = useAlertStore((state) => state.type);
+    const setType = useAlertStore((state) => state.setType);
+
     const [isClosing, setIsClosing] = useState(false);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const closeAnimationRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleClose = () => {
         setIsClosing(true);
-        setTimeout(() => {
-            setIsVisible(false);
+
+        closeAnimationRef.current = setTimeout(() => {
+            setValue(null);
+            setType(null);
             setIsClosing(false);
             onClose?.();
         }, 200);
     };
 
     useEffect(() => {
-        if (message) {
-            setIsVisible(true);
+        if (!value) {
             setIsClosing(false);
+            return;
+        }
 
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
-            }
+        setIsClosing(false);
 
-            if (duration > 0) {
-                timerRef.current = setTimeout(() => {
-                    handleClose();
-                }, duration);
-            }
-        } else {
-            setIsVisible(false);
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
+
+        if (duration > 0) {
+            timerRef.current = setTimeout(() => {
+                handleClose();
+            }, duration);
         }
 
         return () => {
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
-            }
+            if (timerRef.current) clearTimeout(timerRef.current);
+            if (closeAnimationRef.current) clearTimeout(closeAnimationRef.current);
         };
-    }, [message, duration]);
+    }, [value, duration]);
 
-    if (!isVisible || !message) {
+    if (!value) {
         return null;
     }
 
@@ -72,12 +77,12 @@ export default function AlertWindow({message, type = "info", duration = 4000, on
         <aside
             role="status"
             aria-live="polite"
-            className={`${styles.container} ${styles[type]} ${
+            className={`${styles.container} ${styles[type ?? "info"]} ${
                 isClosing ? styles.closing : ""
             }`}
         >
             <span className={styles.icon}>{renderIcon()}</span>
-            <span className={styles.message}>{message}</span>
+            <span className={styles.message}>{value}</span>
             <button
                 type="button"
                 className={styles.closeButton}
