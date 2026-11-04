@@ -9,15 +9,19 @@ import Username from "@/entities/user/ui/Username/Username";
 import { useMessageStore } from "@/entities/message/model/message-settings-store";
 import { useEffect, useRef, useState } from "react";
 import MessageActions from "@/entities/message/ui/MessageActions/MessageActions";
+import {User} from "@/entities/user/model/types";
+import {useUserStore} from "@/entities/user/model/user-store";
 
 interface Props {
     text: string;
     date: Date;
     status: MessageStatusType;
-    user: "other" | "user";
+    owner: User;
 }
 
-export default function MessageText({ text, date, status, user }: Props) {
+export default function MessageText({ text, date, status, owner }: Props) {
+    const user = useUserStore(state => state.user);
+
     const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
     const isVisible = useMessageStore((state) => state.isVisible);
@@ -69,17 +73,17 @@ export default function MessageText({ text, date, status, user }: Props) {
         };
     }, [isVisible, close]);
 
-    if (user === "other") {
+    if (owner.id !== user?.id) {
         return (
             <div className={styles.contentWrapper}>
                 <div className={styles.authorRow}>
-                    <Name />
-                    <Username />
+                    <Name name={owner.name} />
+                    <Username username={owner.username} />
                 </div>
                 <div className={styles.otherBubble}>
                     {text.trim()}
                     <div className={styles.meta}>
-                        <TimeInfo date={date} user={user}/>
+                        <TimeInfo date={date} user={"other"} />
                     </div>
                 </div>
             </div>
@@ -91,7 +95,7 @@ export default function MessageText({ text, date, status, user }: Props) {
             <div className={styles.userBubble} onContextMenu={handleOpen}>
                 {text.trim()}
                 <div className={styles.meta}>
-                    <TimeInfo date={date} user={user}/>
+                    <TimeInfo date={date} user={"user"}/>
                     <Status status={status} />
                 </div>
                 {isVisible && position.top !== 0 && (

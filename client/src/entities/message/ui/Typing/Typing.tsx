@@ -11,7 +11,6 @@ export default function Typing() {
 
     const user = useUserStore(state => state.user);
 
-
     if(userTyping.length === 0 || userIds.includes(user?.id ?? "")) {
         return null
     }
@@ -27,3 +26,5 @@ export default function Typing() {
         </div>
     )
 }
+
+//TODO пофиксить отобрадение, чистить массив

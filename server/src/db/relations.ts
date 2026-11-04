@@ -1,5 +1,8 @@
-import {relations} from "drizzle-orm";
-import {messageTable, sessionTable, settingsTable, userTable} from "./schema";
+import { relations } from "drizzle-orm";
+import { userTable } from "../modules/user/user.schema";
+import { messageTable } from "../modules/message/message.schema";
+import { settingsTable } from "../modules/settings/settings.schema";
+import { sessionTable } from "../modules/auth/auth.schema";
 
 export const userRelations = relations(userTable, ({one, many}) => ({
     settings: many(settingsTable),

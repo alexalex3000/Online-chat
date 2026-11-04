@@ -1,14 +1,5 @@
-import {User} from "@/entities/user/model/types";
-import {MessageStatusType} from "@/entities/message/model/types";
+import {Message} from "@/entities/message/model/types";
 import {create} from "zustand";
-
-interface Message {
-    id: string
-    message: string;
-    status: MessageStatusType;
-    owner: User
-    date: Date
-}
 
 interface MessagesStore {
     messages: Message[];
@@ -16,12 +7,17 @@ interface MessagesStore {
     changeStatusSuccess: (tempId: string, id: string) => void;
     changeStatusError: (id: string) => void;
     addMessage: (message: Message) => void;
+    addMessages: (message: Message[]) => void;
 
     deleteMessage: (id: string) => void;
 }
 
 export const useMessagesStore = create<MessagesStore>((set) => ({
     messages: [],
+
+    addMessages: (messages) => {
+        set((state) => ({messages: [...state.messages, ...messages]}));
+    },
 
     addMessage: (message) => {
         set((state) => ({messages: [...state.messages, message]}));

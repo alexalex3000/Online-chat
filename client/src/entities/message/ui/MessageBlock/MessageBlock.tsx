@@ -5,26 +5,32 @@ import {MessageStatusType} from "@/entities/message/model/types";
 import Avatar from "@/entities/user/ui/Avatar/Avatar";
 import styles from "./MessageBlock.module.scss"
 import MessageText from "@/entities/message/ui/MessageText/MessageText";
+import {useUserStore} from "@/entities/user/model/user-store";
 
 interface Props {
     text: string;
     date: Date;
     status: MessageStatusType;
-    user: "other" | "user"
-    otherUser?: User
+    owner: User;
 }
 
-export default function MessageBlock({text, date, status, user, otherUser}: Props) {
-    if (user == "other") {
+export default function MessageBlock({text, date, status, owner}: Props) {
+    const user = useUserStore(state => state.user)
+
+    if (user?.id !== owner.id) {
         return (
-            <div className={styles.otherContainer}>
-                <Avatar clickable/>
-                <MessageText text={text} date={date} status={status} user={"other"}/>
+            <div className={styles.wrapper}>
+                <div className={styles.otherContainer}>
+                    <Avatar name={`${owner.name} ${owner.surname}`} clickable/>
+                    <MessageText text={text} date={date} status={status} owner={owner} />
+                </div>
             </div>
         );
     }
 
     return (
-        <MessageText text={text} date={date} status={status} user={"user"}/>
+        <div className={styles.wrapper}>
+            <MessageText text={text} date={date} status={status} owner={owner} />
+        </div>
     );
 }

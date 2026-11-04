@@ -5,7 +5,7 @@ interface Props{
     large?: boolean
 }
 
-export default function Name({name = "Alexey Petrikevitch", large}: Props){
+export default function Name({name, large}: Props){
     return (
         <div className={large ? styles.large : styles.name}>
             {name}

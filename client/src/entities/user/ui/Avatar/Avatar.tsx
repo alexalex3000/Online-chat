@@ -31,7 +31,7 @@ export default function Avatar({url, name = "Alexey Petrikevitch", large, clicka
         <div className={large ? styles.large : styles.avatar} onClick={clickable ? handleOpen : () => null}>
             <span className={styles.letters}>{firstLetters}</span>
             {
-                url && (
+                url && url.length > 0 && (
                     <Image
                         src={url}
                         alt={name}

@@ -16,9 +16,29 @@ const validateErrorBody = z.object({
     message: z.string()
 })
 
-const validateOnlineBody = z.object({
-    users: z.array(z.string())
-})
+export const validateOnlineBody = z.object({
+    users: z.array(z.string().uuid()),
+    messages: z.array(
+        z.object({
+            id: z.string().uuid(),
+            message: z.string().min(1),
+            date: z.coerce.date(),
+            status: z.enum(["success", "error", "pending"]),
+            owner: z.object({
+                id: z.string().uuid().optional(),
+                role: z.enum(["user", "admin"]),
+                name: z.string(),
+                surname: z.string(),
+                username: z.string(),
+                email: z.string().email(),
+                about: z.string().nullable(),
+                phoneNumber: z.string().nullable(),
+                logoUrl: z.string().nullable(),
+                lastTimeOnline: z.coerce.date(),
+            }),
+        })
+    ),
+});
 
 const validateNewMessageBody = z.object({
     tempId: z.string().uuid().optional(),
@@ -128,7 +148,7 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                         const isMessageExist = messages.some((message) => message.id === isValid.data.tempId)
 
                         if(isValid.data.tempId && isMessageExist){
-                            useMessagesStore.getState().changeStatusSuccess(isValid.data.tempId, isValid.data.user.id);
+                            useMessagesStore.getState().changeStatusSuccess(isValid.data.tempId, isValid.data.message.id);
                             break
                         }
                         else{
@@ -189,7 +209,11 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                         break;
                     }
                     case "GET_INITIAL_INFO": {
+                        console.log(message);
+
                         const isValid = validateOnlineBody.safeParse(message.data);
+
+                        console.log("isValid: ",isValid);
 
                         if(!isValid.success){
                             console.log(isValid.error);
@@ -199,6 +223,11 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                         set((state) => ({
                             onlineUsers: Array.from(new Set([...state.onlineUsers, ...isValid.data.users]))
                         }));
+
+                        const addMessages = useMessagesStore.getState().addMessages
+
+                        addMessages(isValid.data.messages)
+
                         break;
                     }
 

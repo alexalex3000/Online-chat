@@ -3,6 +3,7 @@ import { userServiceObj } from "../modules/user/user.service";
 import { wsManager } from "./ws.manager";
 import {messageBodyValidateSchema, messageTable, userTypingValidateSchema} from "../modules/message/message.schema";
 import {db} from "../db";
+import {messageServiceObj} from "../modules/message/message.service";
 
 export async function wsMessage(userId: string, rawData: string) {
     let userData: WsMessage;
@@ -90,11 +91,15 @@ export async function wsMessage(userId: string, rawData: string) {
             break;
         case "GET_INITIAL_INFO": {
             const size = wsManager.getOnlineIds()
+            const messages = await messageServiceObj.getPart()
+
+            console.log(messages)
 
             wsManager.sendToUser(userId, {
                 type: "GET_INITIAL_INFO",
                 data: {
-                    users: size
+                    users: size,
+                    messages: messages
                 }
             })
             break

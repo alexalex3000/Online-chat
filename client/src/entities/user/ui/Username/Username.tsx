@@ -5,7 +5,7 @@ interface Props{
     large?: boolean,
 }
 
-export default function Username({username = "", large}:Props){
+export default function Username({username, large}:Props){
     return (
         <div className={large ? styles.large : styles.username}>
             @{username}

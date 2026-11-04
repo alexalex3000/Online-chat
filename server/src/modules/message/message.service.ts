@@ -1,6 +1,5 @@
 import {db} from "../../db";
-import {messageTable} from "../../db/schema";
-import {MessageBody} from "./message.schema";
+import {messageTable} from "./message.schema";
 
 export class MessageService {
     async getAll() {
@@ -12,12 +11,25 @@ export class MessageService {
     }
 
     async getPart() {
-        const resData = await db
-            .select()
-            .from(messageTable)
-            .limit(50)
+        const data = await db.query.messageTable.findMany({
+            limit: 30,
+            orderBy: (messages, { desc }) => [desc(messages.date)],
+            with: {
+                user: true
+            }
+        })
 
-        return resData ?? null
+        const messages= data.map((item) => ({
+            id: item.id,
+            message: item.message,
+            date: item.date,
+            status: "success",
+            owner: item.user,
+        }));
+
+        messages.reverse()
+
+        return messages ?? null
     }
 }
 

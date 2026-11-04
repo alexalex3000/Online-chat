@@ -4,7 +4,7 @@ import {messageServiceObj} from "./message.service";
 export class MessageController {
     async getAll(req: Request, res: Response, next: NextFunction) {
         try{
-            const result = await messageServiceObj.getAll()
+            const result = await messageServiceObj.getPart()
 
             res.status(200).json({
                 success: true,

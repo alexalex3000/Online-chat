@@ -84,8 +84,6 @@ export async function serverFetch<T>(
     const text = await response.text();
     const result = text ? JSON.parse(text) : null;
 
-    console.log(result);
-
     if (!response.ok) {
         throw new Error(result?.message || `Request failed with status ${response.status}`);
     }
