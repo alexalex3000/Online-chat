@@ -9,6 +9,7 @@ const messageRouter = Router();
 messageRouter
     .route("/")
     .get(
+        authMiddleware,
         validateMiddleware({
             query: messageQueryValidateSchema
         }),

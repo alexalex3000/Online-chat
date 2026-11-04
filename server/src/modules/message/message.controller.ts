@@ -2,9 +2,11 @@ import {Request, Response, NextFunction} from "express";
 import {messageServiceObj} from "./message.service";
 
 export class MessageController {
-    async getAll(req: Request, res: Response, next: NextFunction) {
+    async getAll(req: Request<{}, {}, {}, {cursor?: string}>, res: Response, next: NextFunction) {
         try{
-            const result = await messageServiceObj.getPart()
+            const {cursor} = req.query;
+
+            const result = await messageServiceObj.getPart(cursor);
 
             res.status(200).json({
                 success: true,

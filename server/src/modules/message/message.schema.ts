@@ -12,7 +12,6 @@ export const messageTable = pgTable("messages", {
 });
 
 export const messageQueryValidateSchema = z.object({
-    limit: z.coerce.number().int().min(1).max(100).default(30),
     cursor: z.string().uuid().optional(),
 });
 
