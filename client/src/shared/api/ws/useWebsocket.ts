@@ -66,6 +66,7 @@ const validateNewMessageBody = z.object({
 
 type WsTypes = "NEW_MESSAGE"
     | "USER_TYPING"
+    | "USER_TYPING_STOP"
     | "USER_ONLINE"
     | "USER_OFFLINE"
     | "ERROR"
@@ -204,6 +205,20 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
 
                         set((state) => ({
                             usersTyping: Array.from(new Set([...state.usersTyping, {id: isValid.data.userId, fullname: isValid.data.userFullname}]))
+                        }))
+
+                        break;
+                    }
+                    case "USER_TYPING_STOP": {
+                        const isValid = validateUserTypingBody.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        set((state) => ({
+                            usersTyping: state.usersTyping.filter((userTyping) => userTyping.id !== isValid.data.userId),
                         }))
 
                         break;

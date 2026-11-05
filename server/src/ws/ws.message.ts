@@ -5,6 +5,8 @@ import {messageBodyValidateSchema, messageTable, userTypingValidateSchema} from 
 import {db} from "../db";
 import {messageServiceObj} from "../modules/message/message.service";
 
+const userTyping = new Map<string, NodeJS.Timeout>();
+
 export async function wsMessage(userId: string, rawData: string) {
     let userData: WsMessage;
 
@@ -81,19 +83,36 @@ export async function wsMessage(userId: string, rawData: string) {
                 return;
             }
 
-            wsManager.broadcast({
-                type: userData.type,
-                data: {
-                    userId: userId,
-                    userFullname: validation.data.userFullname,
-                }
-            });
+            if(userTyping.has(userId)){
+                clearTimeout(userTyping.get(userId))
+            }
+            else{
+                wsManager.broadcast({
+                    type: userData.type,
+                    data: {
+                        userId: userId,
+                        userFullname: validation.data.userFullname,
+                    }
+                });
+            }
+
+            const timeout = setTimeout(() => {
+                userTyping.delete(userId);
+                wsManager.broadcast({
+                    type: "USER_TYPING_STOP",
+                    data: {
+                        userId: userId,
+                        userFullname: validation.data.userFullname,
+                    }
+                });
+            }, 2000)
+
+            userTyping.set(userId, timeout)
+
             break;
         case "GET_INITIAL_INFO": {
             const size = wsManager.getOnlineIds()
             const messages = await messageServiceObj.getPart()
-
-            console.log(messages)
 
             wsManager.sendToUser(userId, {
                 type: "GET_INITIAL_INFO",

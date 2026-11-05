@@ -3,6 +3,7 @@ import {z} from "zod";
 
 type WsTypes = "NEW_MESSAGE"
     | "USER_TYPING"
+    | "USER_TYPING_STOP"
     | "USER_ONLINE"
     | "USER_OFFLINE"
     | "ERROR"
@@ -23,6 +24,7 @@ export const firstValidate = z.object({
     type: z.enum([
         "NEW_MESSAGE"
         , "USER_TYPING"
+        , "USER_TYPING_STOP"
         , "USER_ONLINE"
         ,"USER_OFFLINE"
         , "ERROR"
