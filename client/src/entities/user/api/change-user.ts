@@ -3,6 +3,7 @@
 import {z} from "zod";
 import {actionClient} from "@/shared/lib/safe-action";
 import {serverFetch} from "@/shared/api/serverFetch";
+import {revalidatePath} from "next/cache";
 
 const changeUserValidateSchema = z.object({
     name: z.string().min(1).optional(),
@@ -22,5 +23,6 @@ export const changeUserDrop = actionClient
             body: JSON.stringify(parsedInput)
         })
 
+        revalidatePath("/profile")
         return result
     })

@@ -7,6 +7,7 @@ import { type User } from "@/entities/user/model/types";
 import { useActionState } from "react";
 import {changeUserDrop} from "@/entities/user/api/change-user";
 import ErrorMessage from "@/shared/ui/ErrorMessage/ErrorMessage";
+import {useAlertStore} from "@/features/AlertWindow/model/alert-store";
 
 interface Props {
     user: User;
@@ -29,6 +30,9 @@ interface StateType {
 }
 
 export default function EditProfileForm({ user }: Props) {
+    const setValue = useAlertStore(state => state.setValue)
+    const setType = useAlertStore(state => state.setType)
+
     const initialState: StateType = {
         success: false,
         fields: {
@@ -44,21 +48,43 @@ export default function EditProfileForm({ user }: Props) {
     const [state, formAction, isPending] = useActionState<StateType, FormData>(
         async (previousState, formData) => {
             const fullName = (formData.get("fullName") as string)?.trim() ?? "";
-            const username = (formData.get("username") as string)?.trim();
-            const about = (formData.get("about") as string)?.trim();
-            const phoneNumber = (formData.get("phoneNumber") as string)?.trim();
-            const email = (formData.get("email") as string)?.trim();
+            const username = ((formData.get("username") as string)?.trim()) ?? "";
+            const about = ((formData.get("about") as string)?.trim()) ?? "";
+            const phoneNumber = ((formData.get("phoneNumber") as string)?.trim()) ?? "";
+            const email = ((formData.get("email") as string)?.trim()) ?? "";
 
-            const [name, ...surnameParts] = fullName.split(/\s+/);
+            const [name = "", ...surnameParts] = fullName.split(/\s+/);
             const surname = surnameParts.join(" ");
 
             const fields = {
-                name: name ?? "",
-                surname: surname ?? "",
-                username: username ?? "",
-                email: email ?? "",
-                about: about ?? "",
-                phoneNumber: phoneNumber ?? ""
+                name,
+                surname,
+                username,
+                email,
+                about,
+                phoneNumber,
+            };
+
+            const initialFullName = `${user.name ?? ""} ${user.surname ?? ""}`.trim();
+            const initialUsername = user.username ?? "";
+            const initialAbout = user.about ?? "";
+            const initialPhoneNumber = user.phoneNumber ?? "";
+            const initialEmail = user.email ?? "";
+
+            const hasChanges =
+                fullName !== initialFullName ||
+                username !== initialUsername ||
+                about !== initialAbout ||
+                phoneNumber !== initialPhoneNumber ||
+                email !== initialEmail;
+
+            if (!hasChanges) {
+                useAlertStore.getState().setValue("No changes detected");
+                useAlertStore.getState().setType("info");
+                return {
+                    success: false,
+                    fields,
+                };
             }
 
             const res = await changeUserDrop({
@@ -74,7 +100,7 @@ export default function EditProfileForm({ user }: Props) {
                 return {
                     success: false,
                     error: { server: res.serverError },
-                    fields
+                    fields,
                 };
             }
 
@@ -89,13 +115,16 @@ export default function EditProfileForm({ user }: Props) {
                         about: res.validationErrors.about?._errors?.[0],
                         phoneNumber: res.validationErrors.phoneNumber?._errors?.[0],
                     },
-                    fields
+                    fields,
                 };
             }
 
+            useAlertStore.getState().setValue("Successfully changed");
+            useAlertStore.getState().setType("success");
+
             return {
                 success: true,
-                fields: fields,
+                fields,
             };
         },
         initialState
