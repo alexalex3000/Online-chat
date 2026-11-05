@@ -1,6 +1,6 @@
 "use client"
 
-import React, {ChangeEvent, useRef, useState} from 'react';
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import styles from './ChatInput.module.scss';
 import {Send} from "lucide-react";
 import {useWebsocket} from "@/shared/api/ws/useWebsocket";
@@ -14,6 +14,13 @@ export default function ChatInput() {
     const isConnected = useWebsocket(state => state.isConnected);
     const user = useUserStore(state => state.user);
     const addMessage = useMessagesStore(state => state.addMessage)
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleClick();
+        }
+    };
 
     const handleClick = () => {
         const tempId = crypto.randomUUID()
@@ -66,7 +73,7 @@ export default function ChatInput() {
                     value={value}
                     placeholder="Write a message..."
                     className={styles.input}
-
+                    onKeyDown={handleKeyDown}
                 />
             </div>
 
