@@ -16,7 +16,7 @@ const validateErrorBody = z.object({
     message: z.string()
 })
 
-export const validateOnlineBody = z.object({
+const validateOnlineBody = z.object({
     users: z.array(z.string().uuid()),
     messages: z.array(
         z.object({
@@ -212,8 +212,6 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                         console.log(message);
 
                         const isValid = validateOnlineBody.safeParse(message.data);
-
-                        console.log("isValid: ",isValid);
 
                         if(!isValid.success){
                             console.log(isValid.error);

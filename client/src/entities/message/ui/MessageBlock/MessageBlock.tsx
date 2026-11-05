@@ -12,14 +12,15 @@ interface Props {
     date: Date;
     status: MessageStatusType;
     owner: User;
+    ref: null | React.Ref<HTMLDivElement>;
 }
 
-export default function MessageBlock({text, date, status, owner}: Props) {
+export default function MessageBlock({text, date, status, owner, ref}: Props) {
     const user = useUserStore(state => state.user)
 
     if (user?.id !== owner.id) {
         return (
-            <div className={styles.wrapper}>
+            <div className={styles.wrapper} ref={ref}>
                 <div className={styles.otherContainer}>
                     <Avatar name={`${owner.name} ${owner.surname}`} clickable/>
                     <MessageText text={text} date={date} status={status} owner={owner} />
@@ -29,7 +30,7 @@ export default function MessageBlock({text, date, status, owner}: Props) {
     }
 
     return (
-        <div className={styles.wrapper}>
+        <div className={styles.wrapper} ref={ref}>
             <MessageText text={text} date={date} status={status} owner={owner} />
         </div>
     );

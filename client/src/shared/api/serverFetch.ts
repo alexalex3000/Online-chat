@@ -1,7 +1,7 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 
-const BACKEND_URL = process.env.SERVER_ENDPOINT || 'http://127.0.0.1:4200/api/v1';
+const BACKEND_URL = process.env.SERVER_ENDPOINT || 'http://localhost:4200/api/v1';
 
 export async function serverFetch<T>(
     endpoint: string,
