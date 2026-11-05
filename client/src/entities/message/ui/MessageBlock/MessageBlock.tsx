@@ -22,7 +22,7 @@ export default function MessageBlock({text, date, status, owner, ref}: Props) {
         return (
             <div className={styles.wrapper} ref={ref}>
                 <div className={styles.otherContainer}>
-                    <Avatar name={`${owner.name} ${owner.surname}`} clickable/>
+                    <Avatar name={`${owner.name} ${owner.surname}`} user={owner} clickable/>
                     <MessageText text={text} date={date} status={status} owner={owner} />
                 </div>
             </div>

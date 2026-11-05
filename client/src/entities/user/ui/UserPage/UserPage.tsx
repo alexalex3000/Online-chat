@@ -6,26 +6,33 @@ import {
     ShieldAlert,
 } from "lucide-react";
 import styles from "./UserPage.module.scss";
+import {User} from "@/entities/user/model/types";
+import {userApi} from "@/entities/user/api/user.api";
 
-interface Props {
-    logoUrl: string | null;
-    name: string | null;
-    username: string | null;
-    status: string | null;
-    about: string | null;
+interface Props{
+    id: string;
 }
 
-export default function UserPage() {
+export default async function UserPage({id}: Props) {
+    if(!id){
+        return null;
+    }
+
+    const {user} = await userApi.getUserById(id);
+
+    if(!user){
+        return null;
+    }
+
     return (
         <>
             <div className={styles.headerCard}>
                 <div className={styles.userMain}>
                     <div className={styles.avatarWrapper}>
-                        <Avatar large/>
+                        <Avatar large name={`${user.name} ${user.surname}`} url={user.logoUrl ?? ""}/>
                     </div>
                     <div className={styles.titleInfo}>
-                        <Name large/>
-                        <Username large/>
+                        <Name large name={`${user.name} ${user.surname}`}/>
                         <span className={styles.status}>last time recently</span>
                     </div>
                 </div>
@@ -34,18 +41,22 @@ export default function UserPage() {
             <div className={styles.infoSection}>
                 <h3 className={styles.sectionTitle}>Information</h3>
 
-                <div className={styles.infoItem}>
-                    <Info size={18} className={styles.itemIcon}/>
-                    <div className={styles.itemContent}>
-                        <span className={styles.itemValue}>Frontend Developer • Building Telegram Web UI</span>
-                        <span className={styles.itemLabel}>About</span>
-                    </div>
-                </div>
+                {
+                    user.about && (
+                        <div className={styles.infoItem}>
+                            <Info size={18} className={styles.itemIcon}/>
+                            <div className={styles.itemContent}>
+                                <span className={styles.itemValue}>{user.about}</span>
+                                <span className={styles.itemLabel}>About</span>
+                            </div>
+                        </div>
+                    )
+                }
 
                 <div className={styles.infoItem}>
                     <span className={styles.itemIconText}>@</span>
                     <div className={styles.itemContent}>
-                        <span className={styles.itemValue}>username</span>
+                        <span className={styles.itemValue}>{user.username}</span>
                         <span className={styles.itemLabel}>User Name</span>
                     </div>
                 </div>

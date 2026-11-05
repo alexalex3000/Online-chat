@@ -5,15 +5,17 @@ import {getFirstLatters} from "@/shared/utils/getFirstLatters";
 import {usePathname, useRouter} from "next/navigation";
 import Image from "next/image";
 import {useUserStore} from "@/entities/user/model/user-store";
+import {User} from "@/entities/user/model/types";
 
 export interface Props {
     url?: string
     name?: string
     large?: boolean
     clickable?: boolean
+    user?: User
 }
 
-export default function Avatar({url, name = "Alexey Petrikevitch", large, clickable}: Props) {
+export default function Avatar({url, name = "Alexey Petrikevitch", large, clickable, user}: Props) {
     const router = useRouter();
     const pathname = usePathname()
 
@@ -23,7 +25,7 @@ export default function Avatar({url, name = "Alexey Petrikevitch", large, clicka
         const params = new URLSearchParams();
 
         params.set("settings", "user-page")
-
+        params.set("user-id", user?.id ?? "")
         router.replace(`${pathname}?${params.toString()}`)
     }
 

@@ -24,7 +24,7 @@ export class UserController {
         try{
             const userId = req.params.id;
 
-            const result = await userServiceObj.getUserById(userId);
+            const result = await userServiceObj.getUser(userId);
 
             return res.status(200).json({
                 success: true,

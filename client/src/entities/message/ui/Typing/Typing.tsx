@@ -11,8 +11,6 @@ export default function Typing() {
 
     const user = useUserStore(state => state.user);
 
-    console.log(userNames)
-
     if(userTyping.length === 0 || userIds.includes(user?.id ?? "")) {
         return null
     }

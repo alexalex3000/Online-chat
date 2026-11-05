@@ -60,10 +60,7 @@ export class UserService{
 
     async getUserById(id: string){
         const [user] = await db
-            .select({
-                name: userTable.name,
-                surname: userTable.surname,
-            })
+            .select()
             .from(userTable)
             .where(eq(userTable.id, id))
 
@@ -71,7 +68,9 @@ export class UserService{
             throw new Error("No user found");
         }
 
-        return user || null;
+        const {passwordHash, ...safeUser} = user;
+
+        return safeUser || null;
     }
 }
 
