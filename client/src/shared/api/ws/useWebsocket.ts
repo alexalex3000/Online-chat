@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { z} from "zod";
 import {useMessagesStore} from "@/entities/message/model/messages-store";
 import {User} from "@/entities/user/model/types";
+import {useAlertStore} from "@/features/AlertWindow/model/alert-store";
 
 const validateResponseBody = z.object({
     userId: z.string()
@@ -84,6 +85,7 @@ interface UseWebsocket {
     connect: () => void;
     disconnect: () => void;
     sendMessage: (data: WsMessage) => void;
+    isReconnecting: boolean
     usersTyping: {
         id: string;
         fullname: string;
@@ -95,9 +97,14 @@ const WEBSOCKET_URL = process.env.NEXT_PUBLIC_WS_SERVER_ENDPOINT || "ws://localh
 
 let reconnectTimer: NodeJS.Timeout | null = null;
 
+const setValue = useAlertStore.getState().setValue
+const setType = useAlertStore.getState().setType
+
+
 export const useWebsocket = create<UseWebsocket>((set, get) => ({
     socket: null,
     isConnected: false,
+    isReconnecting: false,
     usersTyping: [],
     onlineUsers: [],
 
@@ -118,9 +125,17 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                 clearTimeout(reconnectTimer);
                 reconnectTimer = null;
             }
-
             console.log("WebSocket opened");
-            set({ isConnected: true, socket: ws });
+
+            const {isReconnecting} = get();
+
+            if(isReconnecting){
+                setValue("Successfuly reconnecting");
+                setType("success")
+                set({isReconnecting: false});
+            }
+
+            set({ isConnected: true, socket: ws});
 
             const {sendMessage} = get();
 
@@ -273,6 +288,8 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
 
             if (event.code !== 1000 && !reconnectTimer) {
                 reconnectTimer = setTimeout(() => {
+                    setValue("Reconnecting...")
+                    setType("error")
                     console.log("WebSocket reconnecting (3s)...");
                     reconnectTimer = null;
                     get().connect();

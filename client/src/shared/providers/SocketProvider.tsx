@@ -2,6 +2,8 @@
 
 import {useWebsocket} from "@/shared/api/ws/useWebsocket";
 import {useEffect} from "react";
+import AlertWindow from "@/features/AlertWindow/AlertWindow";
+import {useAlertStore} from "@/features/AlertWindow/model/alert-store";
 
 interface Props{
     children: React.ReactNode;
@@ -20,6 +22,8 @@ export default function SocketProvider({children}: Props){
     }, [])
 
     return (
-        <>{children}</>
+        <>
+            {children}
+        </>
     )
 }
