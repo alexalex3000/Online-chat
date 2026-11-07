@@ -3,7 +3,7 @@
 import styles from "./MessageText.module.scss";
 import TimeInfo from "@/entities/message/ui/TimeInfo/TimeInfo";
 import Status from "@/entities/message/ui/Status/Status";
-import { MessageStatusType } from "@/entities/message/model/types";
+import {Message, MessageStatusType} from "@/entities/message/model/types";
 import Name from "@/entities/user/ui/Name/Name";
 import Username from "@/entities/user/ui/Username/Username";
 import { useMessageStore } from "@/entities/message/model/message-settings-store";
@@ -13,18 +13,16 @@ import {User} from "@/entities/user/model/types";
 import {useUserStore} from "@/entities/user/model/user-store";
 
 interface Props {
-    text: string;
-    date: Date;
-    status: MessageStatusType;
-    owner: User;
+    message: Message
 }
 
-export default function MessageText({ text, date, status, owner }: Props) {
+export default function MessageText({message}: Props) {
     const user = useUserStore(state => state.user);
 
     const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
-    const isVisible = useMessageStore((state) => state.isVisible);
+    const activeMessageId = useMessageStore((state) => state.activeMessageId);
+    const isVisible = activeMessageId === message.id;
     const open = useMessageStore((state) => state.open);
     const close = useMessageStore((state) => state.close);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -54,7 +52,7 @@ export default function MessageText({ text, date, status, owner }: Props) {
             top: relativeTop,
         });
 
-        open();
+        open(message.id);
     };
 
     useEffect(() => {
@@ -73,17 +71,17 @@ export default function MessageText({ text, date, status, owner }: Props) {
         };
     }, [isVisible, close]);
 
-    if (owner.id !== user?.id) {
+    if (message.owner.id !== user?.id) {
         return (
             <div className={styles.contentWrapper}>
                 <div className={styles.authorRow}>
-                    <Name name={owner.name} />
-                    <Username username={owner.username} />
+                    <Name name={message.owner.name} />
+                    <Username username={message.owner.username} />
                 </div>
                 <div className={styles.otherBubble}>
-                    {text.trim()}
+                    {message.message.trim()}
                     <div className={styles.meta}>
-                        <TimeInfo date={date} user={"other"} />
+                        <TimeInfo date={message.date} user={"other"} />
                     </div>
                 </div>
             </div>
@@ -93,13 +91,13 @@ export default function MessageText({ text, date, status, owner }: Props) {
     return (
         <div className={styles.userContainer}>
             <div className={styles.userBubble} onContextMenu={handleOpen}>
-                {text.trim()}
+                {message.message.trim()}
                 <div className={styles.meta}>
-                    <TimeInfo date={date} user={"user"}/>
-                    <Status status={status} />
+                    <TimeInfo date={message.date} user={"user"}/>
+                    <Status status={message.status} />
                 </div>
                 {isVisible && position.top !== 0 && (
-                    <MessageActions ref={menuRef} top={position.top} left={position.left} />
+                    <MessageActions id={message.id} text={message.message.trim()} ref={menuRef} top={position.top} left={position.left} />
                 )}
             </div>
         </div>

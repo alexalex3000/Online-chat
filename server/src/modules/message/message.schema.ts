@@ -24,4 +24,13 @@ export const userTypingValidateSchema = z.object({
     userFullname: z.string().min(1)
 })
 
+export const editMessageValidateSchema = z.object({
+    id: z.string().uuid(),
+    message: z.string().min(1),
+})
+
+export const deleteMessageValidateSchema = z.object({
+    id: z.string().uuid(),
+})
+
 export type MessageBody = z.infer<typeof messageBodyValidateSchema>

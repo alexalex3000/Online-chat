@@ -11,6 +11,13 @@ export interface Message {
     date: Date
 }
 
+export const validateMessage = z.object({
+    id: z.string().uuid(),
+    message: z.string().min(1),
+    date: z.string().or(z.date()),
+    userId: z.string().uuid(),
+})
+
 export const validateMessageResponse = z.object({
     success: z.boolean(),
     message: z.string().optional(),

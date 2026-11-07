@@ -1,14 +1,13 @@
 import { create } from "zustand";
 
 interface VisibleStore {
-    isVisible: boolean;
-    open: () => void;
+    activeMessageId: string | null;
+    open: (id: string) => void;
     close: () => void;
 }
 
 export const useMessageStore = create<VisibleStore>((set) => ({
-    isVisible: false,
-
-    open: () => set({ isVisible: true }),
-    close: () => set({ isVisible: false }),
+    activeMessageId: null,
+    open: (id) => set({ activeMessageId: id }),
+    close: () => set({ activeMessageId: null }),
 }));

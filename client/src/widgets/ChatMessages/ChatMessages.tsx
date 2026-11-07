@@ -95,10 +95,7 @@ export default function ChatMessages() {
                     <MessageBlock
                         ref={anchorMessage === message.id ? anchorRef : null}
                         key={message.id}
-                        text={message.message}
-                        date={message.date}
-                        status={message.status}
-                        owner={message.owner}
+                        message={message}
                     />
                 ))}
 

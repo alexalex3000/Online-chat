@@ -1,7 +1,13 @@
 import { firstValidate, WsMessage } from "./ws.types";
 import { userServiceObj } from "../modules/user/user.service";
 import { wsManager } from "./ws.manager";
-import {messageBodyValidateSchema, messageTable, userTypingValidateSchema} from "../modules/message/message.schema";
+import {
+    deleteMessageValidateSchema,
+    editMessageValidateSchema,
+    messageBodyValidateSchema,
+    messageTable,
+    userTypingValidateSchema
+} from "../modules/message/message.schema";
 import {db} from "../db";
 import {messageServiceObj} from "../modules/message/message.service";
 
@@ -122,6 +128,59 @@ export async function wsMessage(userId: string, rawData: string) {
                 }
             })
             break
+        }
+        case "EDIT_MESSAGE": {
+            const isValid = editMessageValidateSchema.safeParse(userData.data);
+
+            if(!isValid.success) {
+                wsManager.sendToUser(userId, {
+                    type: "ERROR",
+                    data: {
+                        success: false,
+                        message: "Bad data format",
+                        errors: isValid.error.format()
+                    }
+                })
+                return
+            }
+
+            const result = await messageServiceObj.editMessage(isValid.data.id, isValid.data.message)
+
+            wsManager.broadcast({
+                type: userData.type,
+                data: {
+                    message: result
+                }
+            });
+
+            break;
+        }
+
+        case "DELETE_MESSAGE": {
+            const isValid = deleteMessageValidateSchema.safeParse(userData.data);
+
+            if(!isValid.success) {
+                wsManager.sendToUser(userId, {
+                    type: "ERROR",
+                    data: {
+                        success: false,
+                        message: "Bad data format",
+                        errors: isValid.error.format()
+                    }
+                })
+                return
+            }
+
+            const result = await messageServiceObj.deleteMessage(isValid.data.id)
+
+            wsManager.broadcast({
+                type: userData.type,
+                data: {
+                    id: result.id
+                }
+            });
+
+            break;
         }
         default:
             console.warn(`Unknown message type: ${(userData as any).type}`);

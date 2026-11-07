@@ -13,6 +13,7 @@ interface MessagesStore {
     deleteMessage: (id: string) => void;
     fetchMessages: (id: string) => Promise<void>;
     isFetchLoading: boolean;
+    editMessage: (id: string, messageText: string) => void;
 
     isWritedMessage: boolean;
 }
@@ -57,7 +58,26 @@ export const useMessagesStore = create<MessagesStore>((set, get) => ({
         }))
     },
 
-    deleteMessage: (id) => {},
+    editMessage(id: string, messageText: string){
+        set(state => ({
+            messages: state.messages.map(message => {
+                if(message.id === id){
+                    return {
+                        ...message,
+                        message: messageText
+                    }
+                }
+
+                return message
+            })
+        }))
+    },
+
+    deleteMessage: (id) => {
+        set(state => ({
+            messages: state.messages.filter((message) => (message.id !== id))
+        }))
+    },
 
     isFetchLoading: false,
     fetchMessages: async (id: string) => {

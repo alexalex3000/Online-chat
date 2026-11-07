@@ -2,6 +2,8 @@ import { WebSocket } from "ws";
 import {z} from "zod";
 
 type WsTypes = "NEW_MESSAGE"
+    | "EDIT_MESSAGE"
+    | "DELETE_MESSAGE"
     | "USER_TYPING"
     | "USER_TYPING_STOP"
     | "USER_ONLINE"
@@ -23,6 +25,8 @@ export interface ExtWebSocket extends WebSocket {
 export const firstValidate = z.object({
     type: z.enum([
         "NEW_MESSAGE"
+        ,"EDIT_MESSAGE"
+        ,"DELETE_MESSAGE"
         , "USER_TYPING"
         , "USER_TYPING_STOP"
         , "USER_ONLINE"

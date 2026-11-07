@@ -1,11 +1,12 @@
 "use client"
 
-import React, {ChangeEvent, useRef, useState, KeyboardEvent} from 'react';
+import React, {ChangeEvent, useRef, useState, KeyboardEvent, useEffect} from 'react';
 import styles from './ChatInput.module.scss';
-import {Send} from "lucide-react";
+import {Check, Send} from "lucide-react";
 import {useWebsocket} from "@/shared/api/ws/useWebsocket";
 import {useUserStore} from "@/entities/user/model/user-store";
 import {useMessagesStore} from "@/entities/message/model/messages-store";
+import {useEditMessage} from "@/entities/message/model/edit-store";
 
 export default function ChatInput() {
     const sendMessage = useWebsocket(state => state.sendMessage);
@@ -15,9 +16,38 @@ export default function ChatInput() {
     const user = useUserStore(state => state.user);
     const addMessage = useMessagesStore(state => state.addMessage)
 
+    const editMessage = useEditMessage(state => state.editMessage)
+    const id = useEditMessage(state => state.id)
+    const setMessage = useEditMessage(state => state.setMessage)
+
+    useEffect(() => {
+        if(id && id.length > 0){
+            setValue(editMessage);
+        }
+    }, [id])
+
+    const handleEdit = () => {
+        sendMessage({
+            type: "EDIT_MESSAGE",
+            data: {
+                id,
+                message: value
+            }
+        })
+
+        setValue('')
+        setMessage("", "")
+    }
+
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
+
+            if(id && id.length > 0){
+                handleEdit()
+                return
+            }
+
             handleClick();
         }
     };
@@ -77,9 +107,31 @@ export default function ChatInput() {
                 />
             </div>
 
-            <button onClick={handleClick} disabled={!isConnected} type="button" aria-label="Send" className={styles.sendButton}>
-                <Send className={styles.sendIcon}/>
-            </button>
+            {
+                id && id.length > 0 ? (
+                    <>
+                        {
+                            value && value.length > 0 && (
+                                <button onClick={handleEdit} disabled={!isConnected} type="button" aria-label="Send" className={styles.sendButton}>
+                                    <Check className={styles.sendIcon}/>
+                                </button>
+                            )
+                        }
+                    </>
+                ) : (
+                    <>
+                        {
+                            value && value.length > 0 && (
+                                <button onClick={handleClick} disabled={!isConnected} type="button" aria-label="Send" className={styles.sendButton}>
+                                    <Send className={styles.sendIcon}/>
+                                </button>
+                            )
+                        }
+                    </>
+                )
+            }
+
+
         </form>
     );
 }

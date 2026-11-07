@@ -3,6 +3,7 @@ import { z} from "zod";
 import {useMessagesStore} from "@/entities/message/model/messages-store";
 import {User} from "@/entities/user/model/types";
 import {useAlertStore} from "@/features/AlertWindow/model/alert-store";
+import {validateMessage} from "@/entities/message/model/types";
 
 const validateResponseBody = z.object({
     userId: z.string()
@@ -57,15 +58,20 @@ const validateNewMessageBody = z.object({
         logoUrl: z.string().nullable().optional(),
     }),
 
-    message: z.object({
-        id: z.string().uuid(),
-        message: z.string().min(1),
-        date: z.string().or(z.date()),
-        userId: z.string().uuid(),
-    }),
+    message: validateMessage
+})
+
+const validateEditMessage = z.object({
+    message: validateMessage
+})
+
+const validateDeleteMessage = z.object({
+    id: z.string().uuid(),
 })
 
 type WsTypes = "NEW_MESSAGE"
+    | "EDIT_MESSAGE"
+    | "DELETE_MESSAGE"
     | "USER_TYPING"
     | "USER_TYPING_STOP"
     | "USER_ONLINE"
@@ -258,6 +264,35 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
 
                         break;
                     }
+
+                    case "EDIT_MESSAGE": {
+                        const isValid = validateEditMessage.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        const editMessage = useMessagesStore.getState().editMessage
+
+                        editMessage(isValid.data.message.id, isValid.data.message.message)
+
+                        break;
+                    }
+
+                    case "DELETE_MESSAGE": {
+                        const isValid = validateDeleteMessage.safeParse(message.data);
+
+                        if(!isValid.success){
+                            console.log(isValid.error);
+                            break
+                        }
+
+                        const deleteMessage = useMessagesStore.getState().deleteMessage
+
+                        deleteMessage(isValid.data.id)
+
+                        break;                    }
 
                     case "ERROR": {
                         const isValid = validateErrorBody.safeParse(message.data);

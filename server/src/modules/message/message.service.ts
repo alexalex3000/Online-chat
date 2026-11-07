@@ -49,6 +49,27 @@ export class MessageService {
 
         return messages;
     }
+
+    async editMessage(messageId: string, message: string){
+        const [result] = await db
+            .update(messageTable)
+            .set({
+                message,
+            })
+            .where(eq(messageTable.id, messageId))
+            .returning()
+
+        return result;
+    }
+
+    async deleteMessage(id: string){
+        const [result] = await db
+            .delete(messageTable)
+            .where(eq(messageTable.id, id))
+            .returning()
+
+        return result
+    }
 }
 
 export const messageServiceObj = new MessageService();
