@@ -6,17 +6,7 @@ import {useOptimistic, useTransition} from "react";
 interface Props{
     isChecked:boolean,
     setChecked:(value:boolean) => void,
-    action: () => Promise<{
-        success: boolean
-        data: {
-            chatSounds: boolean
-            pinnedMessageAlerts: boolean
-            doNotDistract: boolean
-            showOnlineStatus: boolean
-        }
-    } | {
-        success: boolean
-    }>
+    action: () => Promise<void>
 }
 
 export default function Switch({isChecked,setChecked, action}: Props) {

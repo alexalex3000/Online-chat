@@ -1,41 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import styles from "./Privacy.module.scss";
 import Label from "@/shared/ui/Label/Label";
 import Section from "@/shared/ui/Section/Section";
 import Switch from "@/shared/ui/Switch/Switch";
-import styles from "./Privacy.module.scss";
-import {delay} from "@/entities/settings/api/delay";
-import {Setting, UserSettings} from "@/entities/settings/model/types";
-import {settingsApi} from "@/entities/settings/api/settings-api";
-import {changeSettings} from "@/entities/settings/api/change-settings";
+import { changeSettings } from "@/entities/settings/api/change-settings";
+import { useSettingsStore } from "@/entities/settings/model/settings-store";
 
-interface Props{
-    userSettings: UserSettings
-}
+export default function Privacy() {
+    const settings = useSettingsStore((state) => state.settings);
+    const updateSettings = useSettingsStore((state) => state.updateSettings);
 
-export default function Privacy({userSettings}: Props) {
-    const [showOnline, setShowOnline] = useState<boolean>(userSettings.showOnlineStatus);
-    const [doNotDistract, setDoNotDistract] = useState<boolean>(userSettings.doNotDistract);
+    if (!settings) {
+        return null;
+    }
+
+    const { showOnlineStatus, doNotDistract } = settings;
 
     const privacy = [
         {
             title: "Show Online Status",
             text: "Let members see when you’re active",
-            value: showOnline,
-            toggle: setShowOnline,
-            action: async () => await changeSettings({
-                showOnlineStatus: !showOnline,
-            })
+            value: showOnlineStatus,
+            action: async () => {
+                const nextValue = !showOnlineStatus;
+                updateSettings({ showOnlineStatus: nextValue });
+                await changeSettings({ showOnlineStatus: nextValue });
+            },
         },
         {
             title: "Do Not Distract",
             text: "Mute all incoming notifications and sound alerts",
             value: doNotDistract,
-            toggle: setDoNotDistract,
-            action: async () => await changeSettings({
-                doNotDistract: !doNotDistract,
-            })
+            action: async () => {
+                const nextValue = !doNotDistract;
+                updateSettings({ doNotDistract: nextValue });
+                await changeSettings({ doNotDistract: nextValue });
+            },
         },
     ];
 
@@ -53,7 +54,7 @@ export default function Privacy({userSettings}: Props) {
                             <Switch
                                 action={item.action}
                                 isChecked={item.value}
-                                setChecked={item.toggle}
+                                setChecked={() => {}}
                             />
                         </div>
                     ))}

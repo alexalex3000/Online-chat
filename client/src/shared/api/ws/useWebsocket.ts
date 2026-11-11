@@ -4,6 +4,9 @@ import {useMessagesStore} from "@/entities/message/model/messages-store";
 import {User} from "@/entities/user/model/types";
 import {useAlertStore} from "@/features/AlertWindow/model/alert-store";
 import {validateMessage} from "@/entities/message/model/types";
+import {useSettingsStore} from "@/entities/settings/model/settings-store";
+import {changeSettings} from "@/entities/settings/api/change-settings";
+import {generateAvatar} from "@/shared/lib/generateAvatar";
 
 const validateResponseBody = z.object({
     userId: z.string()
@@ -126,12 +129,38 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
 
         const ws = new WebSocket(WEBSOCKET_URL);
 
-        ws.onopen = () => {
+        ws.onopen = async () => {
             if (reconnectTimer) {
                 clearTimeout(reconnectTimer);
                 reconnectTimer = null;
             }
+
+
             console.log("WebSocket opened");
+
+            const permission = await Notification.requestPermission();
+            const updateSettings = useSettingsStore.getState().updateSettings
+
+            if(permission === "granted"){
+                const data = {
+                    chatSounds: true,
+                    pinnedMessageAlerts: true,
+                    doNotDistract: false
+                }
+
+                updateSettings(data)
+
+                await changeSettings(data)
+            }
+            else{
+                const data = {
+                    chatSounds: false,
+                    pinnedMessageAlerts: false,
+                    doNotDistract: true
+                }
+
+                await changeSettings(data)
+            }
 
             const {isReconnecting} = get();
 
@@ -184,6 +213,15 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                                     owner: isValid.data.user as User,
                                     date: new Date(isValid.data.message.date),
                                 });
+
+                                const settings = useSettingsStore.getState().settings;
+
+                                if(settings?.chatSounds && !settings.doNotDistract){
+                                    const notification = new Notification(`${isValid.data.user.name} ${isValid.data.user.surname}`, {
+                                        body: isValid.data.message.message,
+                                        icon: isValid.data.user.logoUrl || generateAvatar(`${isValid.data.user.name} ${isValid.data.user.surname}`),
+                                    });
+                                }
                             }
                         }
 
@@ -245,8 +283,6 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                         break;
                     }
                     case "GET_INITIAL_INFO": {
-                        console.log(message);
-
                         const isValid = validateOnlineBody.safeParse(message.data);
 
                         if(!isValid.success){
