@@ -13,7 +13,6 @@ settingsRoute
         authMiddleware,
         validateMiddleware({
             body: updateSettingsValidationSchema,
-            params: validateUserIdSchema,
         }),
         settingsContollerObj.changeSetting
     );

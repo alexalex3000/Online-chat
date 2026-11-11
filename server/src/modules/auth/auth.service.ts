@@ -44,9 +44,9 @@ export class AuthService {
 
             await tx.insert(settingsTable).values({
                 userId: user.id,
-                chatSounds: true,
-                pinnedMessageAlerts: true,
-                showOnlineStatus: true,
+                chatSounds: false,
+                pinnedMessageAlerts: false,
+                showOnlineStatus: false,
                 doNotDistract: false,
             });
 

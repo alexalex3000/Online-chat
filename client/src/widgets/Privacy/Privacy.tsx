@@ -5,12 +5,16 @@ import Label from "@/shared/ui/Label/Label";
 import Section from "@/shared/ui/Section/Section";
 import Switch from "@/shared/ui/Switch/Switch";
 import styles from "./Privacy.module.scss";
-import {delay} from "@/entities/settigs/api/delay";
-import {Setting} from "@/entities/settigs/model/types";
+import {delay} from "@/entities/settings/api/delay";
+import {Setting, UserSettings} from "@/entities/settings/model/types";
 
-export default function Privacy() {
-    const [showOnline, setShowOnline] = useState<boolean>(false);
-    const [readReceipts, setReadReceipts] = useState<boolean>(false);
+interface Props{
+    userSettings: UserSettings
+}
+
+export default function Privacy({userSettings}: Props) {
+    const [showOnline, setShowOnline] = useState<boolean>(userSettings.showOnlineStatus);
+    const [readReceipts, setReadReceipts] = useState<boolean>(userSettings.doNotDistract);
 
     const privacy:Setting[] = [
         {

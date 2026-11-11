@@ -5,12 +5,17 @@ import {eq, sql} from "drizzle-orm";
 
 export class SettingsService {
     async getSettings(userId: string) {
-        const response = await db
-            .select()
+        const [response] = await db
+            .select({
+                chatSounds: settingsTable.chatSounds,
+                pinnedMessageAlerts: settingsTable.pinnedMessageAlerts,
+                doNotDistract: settingsTable.doNotDistract,
+                showOnlineStatus: settingsTable.showOnlineStatus,
+            })
             .from(settingsTable)
             .where(eq(settingsTable.userId, userId))
 
-        return response ?? []
+        return response ?? null
     }
 
     async changeSetting(setting: SettingsTitleTypes, userId: string){

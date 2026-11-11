@@ -6,17 +6,9 @@ import { AuthenticatedRequest } from "../../middleware/checkCookie.middleware";
 export class SettingsController {
     async getSettings(req: AuthenticatedRequest<UserIdType>, res: Response, next: NextFunction) {
         try {
-            const { userId } = req.params;
             const currentUserId = req.user!.id;
 
-            if (userId !== currentUserId) {
-                return res.status(403).json({
-                    success: false,
-                    message: "Forbidden: Cannot access external user settings"
-                });
-            }
-
-            const result = await settingsServiceObj.getSettings(userId);
+            const result = await settingsServiceObj.getSettings(currentUserId);
 
             return res.status(200).json({
                 success: true,

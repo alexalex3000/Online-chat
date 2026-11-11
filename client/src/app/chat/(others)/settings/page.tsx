@@ -3,6 +3,7 @@ import ChatInterfaceSettings from "@/widgets/ChatInterfaceSettings/ChatInterface
 import styles from "../../page.module.scss"
 import settingStyles from "./settingPage.module.scss"
 import Notifications from "@/widgets/Notifications/Notifications";
+import SettingsWrapper from "@/widgets/SettingsWrapper/SettingsWrapper";
 
 export default function SettingsPage() {
     return (
@@ -10,12 +11,7 @@ export default function SettingsPage() {
             <OtherHeader text="Settings"/>
             <div className={styles.miniMain}>
                 <div className={settingStyles.columns}>
-                    <div>
-                        <ChatInterfaceSettings/>
-                    </div>
-                    <div>
-                        <Notifications/>
-                    </div>
+                    <SettingsWrapper/>
                 </div>
             </div>
         </div>

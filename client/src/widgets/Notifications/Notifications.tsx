@@ -1,16 +1,20 @@
 "use client"
 
-import {delay} from "@/entities/settigs/api/delay";
-import {Setting} from "@/entities/settigs/model/types";
+import {delay} from "@/entities/settings/api/delay";
+import {Setting, UserSettings} from "@/entities/settings/model/types";
 import {useState} from "react";
 import styles from "@/widgets/Privacy/Privacy.module.scss";
 import Label from "@/shared/ui/Label/Label";
 import Section from "@/shared/ui/Section/Section";
 import Switch from "@/shared/ui/Switch/Switch";
 
-export default function Notifications() {
-    const [chatSound, setChatSound] = useState<boolean>(true);
-    const [alertsSound, setAlertsSound] = useState<boolean>(true);
+interface Props{
+    userSettings: UserSettings
+}
+
+export default function Notifications({userSettings}: Props) {
+    const [chatSound, setChatSound] = useState<boolean>(userSettings.chatSounds);
+    const [alertsSound, setAlertsSound] = useState<boolean>(userSettings.pinnedMessageAlerts);
 
     const notification:Setting[] = [
         {
