@@ -15,7 +15,10 @@ export const settingsItemSchema = z.object({
     showOnlineStatus: z.boolean(),
 });
 
+
 export type UserSettings = z.infer<typeof settingsItemSchema>
+
+export type ChangeUserSettings = Partial<UserSettings>
 
 export const settingsResponseSchema = z.object({
     success: z.boolean(),

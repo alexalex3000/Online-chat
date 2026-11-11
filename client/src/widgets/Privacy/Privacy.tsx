@@ -7,6 +7,8 @@ import Switch from "@/shared/ui/Switch/Switch";
 import styles from "./Privacy.module.scss";
 import {delay} from "@/entities/settings/api/delay";
 import {Setting, UserSettings} from "@/entities/settings/model/types";
+import {settingsApi} from "@/entities/settings/api/settings-api";
+import {changeSettings} from "@/entities/settings/api/change-settings";
 
 interface Props{
     userSettings: UserSettings
@@ -14,22 +16,26 @@ interface Props{
 
 export default function Privacy({userSettings}: Props) {
     const [showOnline, setShowOnline] = useState<boolean>(userSettings.showOnlineStatus);
-    const [readReceipts, setReadReceipts] = useState<boolean>(userSettings.doNotDistract);
+    const [doNotDistract, setDoNotDistract] = useState<boolean>(userSettings.doNotDistract);
 
-    const privacy:Setting[] = [
+    const privacy = [
         {
             title: "Show Online Status",
             text: "Let members see when you’re active",
             value: showOnline,
             toggle: setShowOnline,
-            action: delay
+            action: async () => await changeSettings({
+                showOnlineStatus: !showOnline,
+            })
         },
         {
             title: "Do Not Distract",
             text: "Mute all incoming notifications and sound alerts",
-            value: readReceipts,
-            toggle: setReadReceipts,
-            action: delay
+            value: doNotDistract,
+            toggle: setDoNotDistract,
+            action: async () => await changeSettings({
+                doNotDistract: !doNotDistract,
+            })
         },
     ];
 

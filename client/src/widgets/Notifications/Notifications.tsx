@@ -1,12 +1,12 @@
 "use client"
 
-import {delay} from "@/entities/settings/api/delay";
-import {Setting, UserSettings} from "@/entities/settings/model/types";
+import {UserSettings} from "@/entities/settings/model/types";
 import {useState} from "react";
 import styles from "@/widgets/Privacy/Privacy.module.scss";
 import Label from "@/shared/ui/Label/Label";
 import Section from "@/shared/ui/Section/Section";
 import Switch from "@/shared/ui/Switch/Switch";
+import {changeSettings} from "@/entities/settings/api/change-settings";
 
 interface Props{
     userSettings: UserSettings
@@ -16,18 +16,22 @@ export default function Notifications({userSettings}: Props) {
     const [chatSound, setChatSound] = useState<boolean>(userSettings.chatSounds);
     const [alertsSound, setAlertsSound] = useState<boolean>(userSettings.pinnedMessageAlerts);
 
-    const notification:Setting[] = [
+    const notification = [
         {
             title: "Chat Sounds",
             value: chatSound,
             toggle: setChatSound,
-            action: delay
+            action: async () => await changeSettings({
+                chatSounds: !chatSound,
+            })
         },
         {
             title: "Pinned Message Alerts",
             value: alertsSound,
             toggle: setAlertsSound,
-            action: delay
+            action: async () => await changeSettings({
+                pinnedMessageAlerts: !alertsSound,
+            })
         }
     ];
 

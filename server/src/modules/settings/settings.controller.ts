@@ -21,17 +21,9 @@ export class SettingsController {
 
     async changeSetting(req: AuthenticatedRequest<UserIdType>, res: Response, next: NextFunction) {
         try {
-            const { userId } = req.params;
             const currentUserId = req.user!.id;
 
-            if (userId !== currentUserId) {
-                return res.status(403).json({
-                    success: false,
-                    message: "Forbidden: Cannot update external user settings"
-                });
-            }
-
-            const result = await settingsServiceObj.changeSetting(req.body, userId);
+            const result = await settingsServiceObj.changeSetting(req.body, currentUserId);
 
             return res.status(200).json({
                 success: true,

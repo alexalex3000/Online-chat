@@ -1,5 +1,6 @@
 import {serverFetch} from "@/shared/api/serverFetch";
-import {settingsResponseSchema} from "@/entities/settings/model/types";
+import {ChangeUserSettings, settingsResponseSchema, UserSettings} from "@/entities/settings/model/types";
+import {clientFetch} from "@/shared/api/clientFetch";
 
 export const settingsApi = {
     getSettings: async() => {

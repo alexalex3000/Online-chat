@@ -18,24 +18,37 @@ export class SettingsService {
         return response ?? null
     }
 
-    async changeSetting(setting: SettingsTitleTypes, userId: string){
+    async changeSetting(setting: SettingsTitleTypes, userId: string) {
         const updateData = Object.fromEntries(
             Object.entries(setting).filter(([_, value]) => value !== undefined)
         );
 
-        if(Object.keys(updateData).length == 0){
-            return await db.query.settingsTable.findFirst({
-                where: eq(settingsTable.userId, userId)
-            })
+        if (Object.keys(updateData).length === 0) {
+            const existing = await db.query.settingsTable.findFirst({
+                where: eq(settingsTable.userId, userId),
+                columns: {
+                    chatSounds: true,
+                    pinnedMessageAlerts: true,
+                    showOnlineStatus: true,
+                    doNotDistract: true,
+                },
+            });
+
+            return existing ?? null;
         }
 
         const [updated] = await db
             .update(settingsTable)
             .set(updateData)
             .where(eq(settingsTable.userId, userId))
-            .returning();
+            .returning({
+                chatSounds: settingsTable.chatSounds,
+                pinnedMessageAlerts: settingsTable.pinnedMessageAlerts,
+                showOnlineStatus: settingsTable.showOnlineStatus,
+                doNotDistract: settingsTable.doNotDistract,
+            });
 
-        return updated;
+        return updated ?? null;
     }
 }
 
