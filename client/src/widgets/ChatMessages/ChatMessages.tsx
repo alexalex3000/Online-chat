@@ -91,13 +91,26 @@ export default function ChatMessages() {
             className="flex-1 w-full overflow-y-auto overflow-x-hidden min-h-0 [overflow-anchor:none] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
             <div className="flex flex-col gap-1 w-full pb-6">
-                {messages.map((message) => (
-                    <MessageBlock
-                        ref={anchorMessage === message.id ? anchorRef : null}
-                        key={message.id}
-                        message={message}
-                    />
-                ))}
+                {messages.map((message, index) => {
+                    if(message?.owner?.id === messages[index - 1]?.owner?.id){
+                        return (
+                            <MessageBlock
+                                cleared
+                                ref={anchorMessage === message.id ? anchorRef : null}
+                                key={message.id}
+                                message={message}
+                            />
+                        )
+                    }
+
+                    return (
+                        <MessageBlock
+                            ref={anchorMessage === message.id ? anchorRef : null}
+                            key={message.id}
+                            message={message}
+                        />
+                    )
+                })}
 
                 <div ref={bottomRef} className="w-full h-8 shrink-0" aria-hidden="true" />
             </div>

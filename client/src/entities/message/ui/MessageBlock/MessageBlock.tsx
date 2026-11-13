@@ -9,17 +9,18 @@ import {type Message} from "@/entities/message/model/types";
 interface Props {
     ref: null | React.Ref<HTMLDivElement>;
     message: Message;
+    cleared?: boolean;
 }
 
-export default function MessageBlock({message, ref}: Props) {
+export default function MessageBlock({message, ref, cleared}: Props) {
     const user = useUserStore(state => state.user)
 
     if (user?.id !== message.owner?.id) {
         return (
             <div className={styles.wrapper} ref={ref}>
-                <div className={styles.otherContainer}>
-                    <Avatar name={`${message.owner?.name} ${message.owner?.surname}`} user={message.owner ?? undefined} clickable/>
-                    <MessageText message={message} />
+                <div className={!cleared ? styles.otherContainer : styles.marginOtherContainder}>
+                    {!cleared && <Avatar name={`${message.owner?.name} ${message.owner?.surname}`} user={message.owner ?? undefined} clickable/>}
+                    <MessageText cleared={cleared} message={message} />
                 </div>
             </div>
         );

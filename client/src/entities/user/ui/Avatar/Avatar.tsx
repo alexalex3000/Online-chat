@@ -30,7 +30,7 @@ export default function Avatar({url, name, large, clickable, user}: Props) {
     }
 
     return (
-        <div className={large ? styles.large : styles.avatar} onClick={clickable ? handleOpen : () => null}>
+        <div className={large ? styles.large : styles.avatar} onClick={clickable &&  name !== "undefined undefined" && name ? handleOpen : () => null}>
             <span className={styles.letters}>{firstLetters}</span>
             {
                 url && url.length > 0 && (

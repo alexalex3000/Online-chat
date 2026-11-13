@@ -13,10 +13,11 @@ import {User} from "@/entities/user/model/types";
 import {useUserStore} from "@/entities/user/model/user-store";
 
 interface Props {
-    message: Message
+    message: Message;
+    cleared?: boolean
 }
 
-export default function MessageText({message}: Props) {
+export default function MessageText({message, cleared}: Props) {
     const user = useUserStore(state => state.user);
 
     const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
@@ -74,10 +75,14 @@ export default function MessageText({message}: Props) {
     if (message.owner?.id !== user?.id) {
         return (
             <div className={styles.contentWrapper}>
-                <div className={styles.authorRow}>
-                    <Name name={message.owner?.name ?? "Deleted account"} />
-                    <Username username={message.owner?.username ?? ""} />
-                </div>
+                {
+                    !cleared && (
+                        <div className={styles.authorRow}>
+                            <Name name={message.owner?.name ?? "Deleted account"} />
+                            <Username username={message.owner?.username ?? ""} />
+                        </div>
+                    )
+                }
                 <div className={styles.otherBubble}>
                     {message.message.trim()}
                     <div className={styles.meta}>
