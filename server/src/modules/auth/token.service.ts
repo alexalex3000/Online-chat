@@ -88,6 +88,8 @@ export class TokenService {
     }
 
     async deleteSession(refreshToken: string){
+        console.log(refreshToken)
+
         await db
             .delete(sessionTable)
             .where(eq(sessionTable.refreshToken, refreshToken))

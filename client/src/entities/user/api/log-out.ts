@@ -6,7 +6,7 @@ import {redirect} from "next/navigation";
 
 export async function logOut() {
     try{
-        const result = await serverFetch("/user/logout", {
+        const result = await serverFetch("/auth/logout", {
             method: "POST",
         })
 
