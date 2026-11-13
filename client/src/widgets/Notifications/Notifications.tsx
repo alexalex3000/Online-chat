@@ -62,5 +62,3 @@ export default function Notifications() {
         </div>
     );
 }
-
-//TODO сделать отображение статусов и мерджить ветку
