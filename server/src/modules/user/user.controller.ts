@@ -62,6 +62,21 @@ export class UserController {
             next(e);
         }
     }
+
+    async updateLastTimeOnline(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+        try{
+            const userId = req.user!.id;
+
+            const result = await userServiceObj.updateLastTimeOnline(userId);
+
+            return res.status(200).json({
+                success: true,
+                lastTimeOnline: result
+            });
+        } catch (e){
+            next(e);
+        }
+    }
 }
 
 export const userControllerObj = new UserController();

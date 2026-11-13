@@ -17,4 +17,9 @@ settingsRoute
         settingsContollerObj.changeSetting
     );
 
+settingsRoute
+    .route("/:userId")
+    .get(authMiddleware, settingsContollerObj.getUserSettings)
+
+
 export default settingsRoute;

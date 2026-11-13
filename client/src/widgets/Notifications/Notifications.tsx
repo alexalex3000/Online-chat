@@ -30,7 +30,7 @@ export default function Notifications() {
             },
         },
         {
-            title: "Pinned Message Alerts",
+            title: "Pinned Message Alerts (In future)",
             value: pinnedMessageAlerts,
             action: async () => {
                 const nextValue = !pinnedMessageAlerts;
@@ -53,7 +53,7 @@ export default function Notifications() {
                             <Switch
                                 action={item.action}
                                 isChecked={item.value}
-                                setChecked={() => {}} // управление теперь идёт через action/store
+                                setChecked={() => {}}
                             />
                         </div>
                     ))}
@@ -62,3 +62,5 @@ export default function Notifications() {
         </div>
     );
 }
+
+//TODO сделать отображение статусов и мерджить ветку

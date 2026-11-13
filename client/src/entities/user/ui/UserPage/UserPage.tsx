@@ -1,13 +1,13 @@
 import Avatar from "@/entities/user/ui/Avatar/Avatar";
 import Name from "@/entities/user/ui/Name/Name";
-import Username from "@/entities/user/ui/Username/Username";
 import {
     Info,
     ShieldAlert,
 } from "lucide-react";
 import styles from "./UserPage.module.scss";
-import {User} from "@/entities/user/model/types";
 import {userApi} from "@/entities/user/api/user.api";
+import LastTimeOnline from "@/entities/user/ui/LastTImeOnline/LastTImeOnline";
+import {getOtherSettings} from "@/entities/settings/api/get-other-settings";
 
 interface Props{
     id: string;
@@ -19,8 +19,9 @@ export default async function UserPage({id}: Props) {
     }
 
     const {user} = await userApi.getUserById(id);
+    const settingsResult = await getOtherSettings(id)
 
-    if(!user){
+    if(!user || !settingsResult || !settingsResult.success || !settingsResult.settings){
         return null;
     }
 
@@ -33,7 +34,7 @@ export default async function UserPage({id}: Props) {
                     </div>
                     <div className={styles.titleInfo}>
                         <Name large name={`${user.name} ${user.surname}`}/>
-                        <span className={styles.status}>last time recently</span>
+                        <LastTimeOnline timeVisible={settingsResult.settings.showOnlineStatus}/>
                     </div>
                 </div>
             </div>

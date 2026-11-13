@@ -1,7 +1,6 @@
 import {User} from "@/entities/user/model/types";
 import {create} from "zustand";
 
-
 interface UserStore {
     user: User | null;
     setUser: (user: User | null) => void;

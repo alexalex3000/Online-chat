@@ -7,6 +7,8 @@ import {validateMessage} from "@/entities/message/model/types";
 import {useSettingsStore} from "@/entities/settings/model/settings-store";
 import {changeSettings} from "@/entities/settings/api/change-settings";
 import {generateAvatar} from "@/shared/lib/generateAvatar";
+import {clientFetch} from "@/shared/api/clientFetch";
+import {getSettings} from "@/entities/settings/api/get-settings-client";
 
 const validateResponseBody = z.object({
     userId: z.string()
@@ -135,17 +137,19 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                 reconnectTimer = null;
             }
 
-
             console.log("WebSocket opened");
+
+            const result = await getSettings()
 
             const permission = await Notification.requestPermission();
             const updateSettings = useSettingsStore.getState().updateSettings
 
-            if(permission === "granted"){
+            if(permission === "granted" && result.success && "data" in result){
                 const data = {
                     chatSounds: true,
                     pinnedMessageAlerts: true,
-                    doNotDistract: false
+                    doNotDistract: false,
+                    showOnlineStatus: result.data.showOnlineStatus
                 }
 
                 updateSettings(data)
@@ -156,7 +160,12 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                 const data = {
                     chatSounds: false,
                     pinnedMessageAlerts: false,
-                    doNotDistract: true
+                    doNotDistract: true,
+                    showOnlineStatus: false,
+                }
+
+                if("data" in result){
+                    data.showOnlineStatus = result.data.showOnlineStatus
                 }
 
                 await changeSettings(data)
@@ -349,11 +358,19 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
             }
         };
 
-        ws.onerror = (error) => {
+        ws.onerror = async (error) => {
             console.error("WebSocket error:", error);
+
+            try{
+                await clientFetch("/user", {
+                    method: "POST"
+                })
+            } catch (e){
+                console.log(e)
+            }
         };
 
-        ws.onclose = (event) => {
+        ws.onclose = async (event) => {
             console.log(`WebSocket closed with code: ${event.code}`);
             set({ isConnected: false, socket: null, onlineUsers: []});
 
@@ -365,13 +382,21 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                     reconnectTimer = null;
                     get().connect();
                 }, 3000);
+
+                try{
+                    await clientFetch("/user", {
+                        method: "POST"
+                    })
+                } catch (e){
+                    console.log(e)
+                }
             }
         };
 
         set({ socket: ws });
     },
 
-    disconnect: () => {
+    disconnect: async () => {
         if (reconnectTimer) {
             clearTimeout(reconnectTimer);
             reconnectTimer = null;
@@ -382,6 +407,14 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
         if (socket) {
             socket.close(1000, "Socket closed manually");
             set({ isConnected: false, socket: null, onlineUsers: [] });
+
+            try{
+                await clientFetch("/user", {
+                    method: "POST"
+                })
+            } catch (e){
+                console.log(e)
+            }
         }
     },
 

@@ -1,6 +1,6 @@
-import {ChangeUser, User, userTable} from "./user.schema";
+import {ChangeUser, userTable} from "./user.schema";
 import {db} from "../../db";
-import {count, eq, gte, sql} from "drizzle-orm";
+import {count, eq} from "drizzle-orm";
 import {wsManager} from "../../ws/ws.manager";
 
 export class UserService{
@@ -58,19 +58,18 @@ export class UserService{
         return users
     }
 
-    async getUserById(id: string){
-        const [user] = await db
-            .select()
-            .from(userTable)
+    async updateLastTimeOnline(id: string){
+        const [result] = await db
+            .update(userTable)
+            .set({
+                lastTimeOnline: new Date(),
+            })
             .where(eq(userTable.id, id))
+            .returning({
+                lastTimeOnline: userTable.lastTimeOnline,
+            })
 
-        if(!user){
-            throw new Error("No user found");
-        }
-
-        const {passwordHash, ...safeUser} = user;
-
-        return safeUser || null;
+        return result || null
     }
 }
 

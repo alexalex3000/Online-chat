@@ -9,6 +9,7 @@ const userRoute = Router();
 userRoute
     .route("/")
     .get(userControllerObj.getUserCount)
+    .post(authMiddleware, userControllerObj.updateLastTimeOnline)
 
 userRoute
     .route("/me")

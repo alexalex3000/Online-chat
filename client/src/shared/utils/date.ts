@@ -20,3 +20,7 @@ export default function getDayStr(date: Date){
 export function getTime(date: Date){
     return `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}`
 }
+
+export function getFullDate(date: Date){
+    return `${getDayStr(date)} ${getTime(date)}`
+}

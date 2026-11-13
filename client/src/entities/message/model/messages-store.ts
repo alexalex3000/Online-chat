@@ -110,5 +110,3 @@ export const useMessagesStore = create<MessagesStore>((set, get) => ({
         }
     },
 }))
-
-//TODO добавить изменение сообщения
