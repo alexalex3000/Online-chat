@@ -3,7 +3,9 @@
 import MessageBlock from "@/entities/message/ui/MessageBlock/MessageBlock";
 import { useMessagesStore } from "@/entities/message/model/messages-store";
 import EmptyChat from "@/shared/ui/EmptyChat/EmptyChat";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import {Fragment, useEffect, useLayoutEffect, useRef} from "react";
+import ChatTimeSection from "@/shared/ui/ChatTimeSection/ChatTimeSection";
+import {isDifferentDay} from "@/shared/utils/date";
 
 export default function ChatMessages() {
     const messages = useMessagesStore((state) => state.messages);
@@ -91,25 +93,27 @@ export default function ChatMessages() {
             className="flex-1 w-full overflow-y-auto overflow-x-hidden min-h-0 [overflow-anchor:none] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
             <div className="flex flex-col gap-1 w-full pb-6">
+
                 {messages.map((message, index) => {
-                    if(message?.owner?.id === messages[index - 1]?.owner?.id){
-                        return (
-                            <MessageBlock
-                                cleared
-                                ref={anchorMessage === message.id ? anchorRef : null}
-                                key={message.id}
-                                message={message}
-                            />
-                        )
-                    }
+                    const prevMessage = messages[index - 1];
+                    const showDateSeparator = isDifferentDay(message.date, prevMessage?.date);
+
+                    const isSameAuthor = message?.owner?.id === prevMessage?.owner?.id
+
+                    const isCleared = isSameAuthor && !showDateSeparator;
 
                     return (
-                        <MessageBlock
-                            ref={anchorMessage === message.id ? anchorRef : null}
-                            key={message.id}
-                            message={message}
-                        />
-                    )
+                        <Fragment key={message.id}>
+                            {showDateSeparator && (
+                                <ChatTimeSection date={message.date} />
+                            )}
+                            <MessageBlock
+                                cleared={isCleared}
+                                ref={anchorMessage === message.id ? anchorRef : null}
+                                message={message}
+                            />
+                        </Fragment>
+                    );
                 })}
 
                 <div ref={bottomRef} className="w-full h-8 shrink-0" aria-hidden="true" />

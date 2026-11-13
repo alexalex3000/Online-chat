@@ -11,7 +11,7 @@
   --chat-bubble-incoming: #172433;
   --chat-bubble-outgoing: #1f476b;
   --chat-pinned-bg: #142232;
-  --chat-system-pill: rgba(255, 255, 255, 0.07);
+  --chat-system-pill: rgba(23, 36, 51, 0.92);
   --accent-primary: #5294e2;
   --accent-primary-hover: #4182cf;
   --accent-active-item: #192e45;
@@ -44,8 +44,7 @@
   --chat-bubble-incoming: #2c2e33;
   --chat-bubble-outgoing: #39424e;
   --chat-pinned-bg: #26282d;
-  --chat-system-pill: rgba(255, 255, 255, 0.09);
-
+  --chat-system-pill: rgba(44, 46, 51, 0.92);
   --accent-primary: #6c8ca6;
   --accent-primary-hover: #5d7c95;
   --accent-active-item: #2f343b;
@@ -78,8 +77,7 @@
   --chat-bubble-incoming: #eef2f6;
   --chat-bubble-outgoing: #2979ff;
   --chat-pinned-bg: #eaf1fa;
-  --chat-system-pill: rgba(0, 0, 0, 0.06);
-
+  --chat-system-pill: rgba(238, 242, 246, 0.94);
   --accent-primary: #2979ff;
   --accent-primary-hover: #1c68e3;
   --accent-active-item: #dce9f8;
