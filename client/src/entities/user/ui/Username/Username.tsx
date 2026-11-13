@@ -8,7 +8,11 @@ interface Props{
 export default function Username({username, large}:Props){
     return (
         <div className={large ? styles.large : styles.username}>
-            @{username}
+            {
+                username && (
+                    <>@{username}</>
+                )
+            }
         </div>
     )
 }

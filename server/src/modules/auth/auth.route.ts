@@ -40,4 +40,10 @@ authRoute.post(
     authControllerObj.allLogout
 );
 
+authRoute.delete(
+    "/delete",
+    authMiddleware,
+    authControllerObj.deleteAccount
+)
+
 export default authRoute;

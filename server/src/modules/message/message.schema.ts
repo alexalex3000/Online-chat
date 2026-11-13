@@ -6,8 +6,7 @@ export const messageTable = pgTable("messages", {
     id: uuid("id").defaultRandom().primaryKey(),
     message: text("message").notNull(),
     userId: uuid("user_id")
-        .notNull()
-        .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
+        .references(() => userTable.id, { onDelete: "set null", onUpdate: "cascade" }),
     date: timestamp("date").defaultNow().notNull(),
 });
 

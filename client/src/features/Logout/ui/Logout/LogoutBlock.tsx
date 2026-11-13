@@ -8,6 +8,8 @@ import {logOut} from "@/entities/user/api/log-out";
 import {useWebsocket} from "@/shared/api/ws/useWebsocket";
 import {useUserStore} from "@/entities/user/model/user-store";
 import {useAlertStore} from "@/features/AlertWindow/model/alert-store";
+import {deleteAccount} from "@/entities/user/api/delete";
+import {redirect} from "next/navigation";
 
 export default function LogoutBlock() {
     const disconnect = useWebsocket(state => state.disconnect);
@@ -30,6 +32,21 @@ export default function LogoutBlock() {
         }
     }
 
+    const handleDelete = async () => {
+        const result = await deleteAccount()
+        disconnect()
+        if(result.success){
+            setMessage(result.message)
+            setType("success")
+        }
+        else{
+            setMessage(result.message)
+            setType("error")
+        }
+
+        redirect("/login")
+    }
+
     return (
         <div className={styles.container}>
             <Label label="DANGER ZONE" red/>
@@ -38,7 +55,7 @@ export default function LogoutBlock() {
                     <LogIn/>
                     <p>Log out</p>
                 </Button>
-                <Button red onClick={() => {}}>
+                <Button red onClick={handleDelete}>
                     <Trash2/>
                     <p>Delete Account</p>
                 </Button>

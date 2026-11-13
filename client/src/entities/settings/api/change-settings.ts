@@ -8,8 +8,6 @@ export const changeSettings =  async (data: ChangeUserSettings) => {
             body: JSON.stringify(data),
         });
 
-        console.log(result)
-
         const isValid = settingsResponseSchema.safeParse(result);
 
         if (!isValid.success) {

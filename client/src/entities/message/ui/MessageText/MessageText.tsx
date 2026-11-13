@@ -71,12 +71,12 @@ export default function MessageText({message}: Props) {
         };
     }, [isVisible, close]);
 
-    if (message.owner.id !== user?.id) {
+    if (message.owner?.id !== user?.id) {
         return (
             <div className={styles.contentWrapper}>
                 <div className={styles.authorRow}>
-                    <Name name={message.owner.name} />
-                    <Username username={message.owner.username} />
+                    <Name name={message.owner?.name ?? "Deleted account"} />
+                    <Username username={message.owner?.username ?? ""} />
                 </div>
                 <div className={styles.otherBubble}>
                     {message.message.trim()}

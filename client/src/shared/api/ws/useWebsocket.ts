@@ -42,7 +42,7 @@ const validateOnlineBody = z.object({
                 phoneNumber: z.string().nullable(),
                 logoUrl: z.string().nullable(),
                 lastTimeOnline: z.coerce.date(),
-            }),
+            }).nullable(),
         })
     ),
 });
@@ -293,6 +293,8 @@ export const useWebsocket = create<UseWebsocket>((set, get) => ({
                     }
                     case "GET_INITIAL_INFO": {
                         const isValid = validateOnlineBody.safeParse(message.data);
+
+                        console.log(isValid)
 
                         if(!isValid.success){
                             console.log(isValid.error);

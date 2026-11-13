@@ -7,7 +7,7 @@ export interface Message {
     id: string
     message: string;
     status: MessageStatusType;
-    owner: User
+    owner: User | null
     date: Date
 }
 

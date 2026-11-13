@@ -15,11 +15,11 @@ export interface Props {
     user?: User
 }
 
-export default function Avatar({url, name = "Alexey Petrikevitch", large, clickable, user}: Props) {
+export default function Avatar({url, name, large, clickable, user}: Props) {
     const router = useRouter();
     const pathname = usePathname()
 
-    const firstLetters = getFirstLatters(name)
+    const firstLetters = getFirstLatters(name === "undefined undefined" || !name ? "Deleted Account" : name)
 
     const handleOpen = () => {
         const params = new URLSearchParams();
@@ -36,7 +36,7 @@ export default function Avatar({url, name = "Alexey Petrikevitch", large, clicka
                 url && url.length > 0 && (
                     <Image
                         src={url}
-                        alt={name}
+                        alt={name ?? "deleted account"}
                         fill
                         sizes={large ? "(max-width: 574px) 70px, 100px" : "40px"}
                         className={styles.image}

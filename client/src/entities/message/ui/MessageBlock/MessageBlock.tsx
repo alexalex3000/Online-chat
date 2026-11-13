@@ -1,7 +1,5 @@
 "use client"
 
-import {User} from "@/entities/user/model/types";
-import {MessageStatusType} from "@/entities/message/model/types";
 import Avatar from "@/entities/user/ui/Avatar/Avatar";
 import styles from "./MessageBlock.module.scss"
 import MessageText from "@/entities/message/ui/MessageText/MessageText";
@@ -16,11 +14,11 @@ interface Props {
 export default function MessageBlock({message, ref}: Props) {
     const user = useUserStore(state => state.user)
 
-    if (user?.id !== message.owner.id) {
+    if (user?.id !== message.owner?.id) {
         return (
             <div className={styles.wrapper} ref={ref}>
                 <div className={styles.otherContainer}>
-                    <Avatar name={`${message.owner.name} ${message.owner.surname}`} user={message.owner} clickable/>
+                    <Avatar name={`${message.owner?.name} ${message.owner?.surname}`} user={message.owner ?? undefined} clickable/>
                     <MessageText message={message} />
                 </div>
             </div>

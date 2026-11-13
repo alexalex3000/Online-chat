@@ -44,7 +44,6 @@ export class AuthController {
             res.cookie("accessToken", result.tokens.accessToken, ACCESS_COOKIE_OPTIONS);
             res.cookie("refreshToken", result.tokens.refreshToken, REFRESH_COOKIE_OPTIONS);
 
-
             return res.status(200).json({
                 success: true,
                 user: result.user,
@@ -121,7 +120,27 @@ export class AuthController {
         } catch (e) {
             next(e);
         }
-    };
+    }
+
+    deleteAccount = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const userId = req.user!.id;
+
+            await authServiceObj.deleteAccount(userId);
+
+            res.clearCookie("accessToken", { path: "/" });
+            res.clearCookie("refreshToken", { path: "/" });
+
+            return res.status(200).json({
+                success: true,
+                message: "Account successful deleted",
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+
 }
 
 export const authControllerObj = new AuthController();

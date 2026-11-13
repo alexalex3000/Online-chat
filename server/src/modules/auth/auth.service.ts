@@ -150,6 +150,14 @@ export class AuthService {
     async logoutAll(userId: string){
         await tokenServiceObj.deleteAllSessions(userId)
     }
+
+    async deleteAccount(userId: string){
+        await db
+            .delete(userTable)
+            .where(eq(userTable.id, userId))
+
+        await tokenServiceObj.deleteAllSessions(userId)
+    }
 }
 
 export const authServiceObj = new AuthService();
