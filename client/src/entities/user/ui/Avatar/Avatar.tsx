@@ -4,8 +4,8 @@ import styles from "./Avatar.module.scss"
 import {getFirstLatters} from "@/shared/utils/getFirstLatters";
 import {usePathname, useRouter} from "next/navigation";
 import Image from "next/image";
-import {useUserStore} from "@/entities/user/model/user-store";
 import {User} from "@/entities/user/model/types";
+import ChangeUserLogo from "@/features/ChangeUserLogo/ChangeUserLogo";
 
 export interface Props {
     url?: string
@@ -13,9 +13,10 @@ export interface Props {
     large?: boolean
     clickable?: boolean
     user?: User
+    canChange?: boolean
 }
 
-export default function Avatar({url, name, large, clickable, user}: Props) {
+export default function Avatar({url, name, large, clickable, user, canChange}: Props) {
     const router = useRouter();
     const pathname = usePathname()
 
@@ -42,6 +43,10 @@ export default function Avatar({url, name, large, clickable, user}: Props) {
                         className={styles.image}
                     />
                 )
+            }
+
+            {
+                canChange && <ChangeUserLogo/>
             }
         </div>
     )

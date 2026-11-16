@@ -9,7 +9,7 @@ export default function ProfilePage() {
         <div className={styles.wrapperNoPoint}>
             <OtherHeader text="Profile" showButton/>
             <div className={styles.miniMain}>
-                <UserLink large/>
+                <UserLink canChange large/>
                 <EditProfile/>
                 <LogoutBlock/>
             </div>

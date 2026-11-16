@@ -32,3 +32,5 @@ export default function MessageBlock({message, ref, cleared}: Props) {
         </div>
     );
 }
+
+//TODO добавить цвета юзерам

@@ -9,9 +9,10 @@ import {GetUserResponse} from "@/entities/user/model/types";
 
 interface Props {
     large?: boolean;
+    canChange?: boolean
 }
 
-export default async function UserLink({large}: Props) {
+export default async function UserLink({large, canChange}: Props) {
     const info = await userApi.getUser() as GetUserResponse
 
     const fullName = [info.user?.name, info.user?.surname].filter(Boolean).join(" ") || undefined;
@@ -20,6 +21,7 @@ export default async function UserLink({large}: Props) {
         return (
             <div className={styles.containerLarge}>
                 <Avatar
+                    canChange={canChange}
                     name={fullName}
                     url={info?.user?.logoUrl ?? undefined}
                     large />
@@ -36,6 +38,7 @@ export default async function UserLink({large}: Props) {
             <div className={styles.container}>
                 <Avatar
                     name={fullName}
+                    canChange={canChange}
                     url={info?.user?.logoUrl ?? undefined}
                 />
                 <div className={styles?.userInfo}>

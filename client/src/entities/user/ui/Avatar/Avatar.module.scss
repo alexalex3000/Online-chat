@@ -11,10 +11,9 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   user-select: none;
-  overflow: hidden;
   flex-shrink: 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  line-height: 1; /* Убирает лишнее пространство вокруг строки */
+  line-height: 1;
 }
 
 .avatar {
