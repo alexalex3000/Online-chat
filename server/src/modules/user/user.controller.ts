@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ChangeUser } from "./user.schema";
+import {ChangeAvatar, ChangeUser} from "./user.schema";
 import { userServiceObj } from "./user.service";
 import { AuthenticatedRequest } from "../../middleware/checkCookie.middleware";
 
@@ -68,6 +68,27 @@ export class UserController {
             const userId = req.user!.id;
 
             const result = await userServiceObj.updateLastTimeOnline(userId);
+
+            return res.status(200).json({
+                success: true,
+                lastTimeOnline: result
+            });
+        } catch (e){
+            next(e);
+        }
+    }
+
+    async updateUserAvatar(req: AuthenticatedRequest<{}, {}, ChangeAvatar>, res: Response, next: NextFunction){
+        try{
+            const userId = req.user!.id;
+
+            const {logoUrl} = req.body
+
+            if(!logoUrl){
+                throw new Error("Cant find avatar")
+            }
+
+            const result = await userServiceObj.changeUserAvatar(userId, logoUrl);
 
             return res.status(200).json({
                 success: true,

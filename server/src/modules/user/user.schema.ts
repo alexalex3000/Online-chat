@@ -44,4 +44,10 @@ export const getUserByIdValidateSchema = z.object({
     id: z.string().min(1),
 })
 
+export const changeUserAvatarSchema = changeUserValidateSchema.pick({
+    logoUrl: true
+})
+
+export type ChangeAvatar = z.infer<typeof changeUserAvatarSchema>
+
 export type ChangeUser = z.infer<typeof changeUserValidateSchema>;

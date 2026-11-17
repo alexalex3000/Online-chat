@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {userControllerObj} from "./user.controller";
 import {validateMiddleware} from "../../middleware/validate.middleware";
-import {changeUserValidateSchema, getUserByIdValidateSchema} from "./user.schema";
+import {changeUserAvatarSchema, changeUserValidateSchema, getUserByIdValidateSchema} from "./user.schema";
 import {authMiddleware} from "../../middleware/checkCookie.middleware";
 
 const userRoute = Router();
@@ -19,5 +19,9 @@ userRoute
 userRoute
     .route("/:id")
     .get(authMiddleware, userControllerObj.getUserById)
+
+userRoute
+    .route("/avatar")
+    .post(authMiddleware, validateMiddleware({body: changeUserAvatarSchema}), userControllerObj.updateUserAvatar)
 
 export default userRoute;

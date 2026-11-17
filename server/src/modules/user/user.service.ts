@@ -58,6 +58,22 @@ export class UserService{
         return users
     }
 
+    async changeUserAvatar(id: string, url: string){
+        const [result] = await db
+            .update(userTable)
+            .set({
+                logoUrl: url
+            })
+            .where(eq(userTable.id, id))
+            .returning({
+                logoUrl: userTable.logoUrl
+            })
+
+        console.log(result)
+
+        return result
+    }
+
     async updateLastTimeOnline(id: string){
         const [result] = await db
             .update(userTable)

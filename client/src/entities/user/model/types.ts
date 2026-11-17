@@ -1,4 +1,5 @@
 import {z} from "zod";
+import {bool} from "sharp";
 
 export interface User {
     id?:string;
@@ -41,3 +42,8 @@ export interface GetUserCountResponse {
         onlineTotal: number;
     };
 }
+
+export const changeAvatarValidate = z.object({
+    success: z.boolean(),
+    logoUrl: z.string().nullable()
+})

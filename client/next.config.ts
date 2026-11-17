@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, "src")],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "fgfzefjnmyzoa1yb.public.blob.vercel-storage.com",
+      },
+    ],
+  },
   turbopack: {
     root: path.resolve(__dirname),
   },
