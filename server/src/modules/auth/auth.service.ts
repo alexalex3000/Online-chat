@@ -9,7 +9,7 @@ import {settingsTable} from "../settings/settings.schema";
 
 config({path: ".env.local"});
 
-const PEPPER = Buffer.from(process.env.PEPPER || "", "utf-8");
+const PEPPER = Buffer.from(process.env.PASSWORD_PEPPER || "", "utf-8");
 
 export class AuthService {
     async register(userData:RegisterData){
