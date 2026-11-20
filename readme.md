@@ -2,8 +2,6 @@
 
 A real-time web chat application structured as a monorepo with a **Next.js** client (following Feature-Sliced Design) and an **Express + WebSocket + PostgreSQL** backend.
 
-&lt;!-- Optional badges: add build status, license, or live demo badges here --&gt;
-
 ## Features
 
 - **Real-time messaging:** Send, edit, and delete messages over WebSocket (`/ws`), backed by cursor-based message history pagination.
@@ -12,8 +10,6 @@ A real-time web chat application structured as a monorepo with a **Next.js** cli
 - **User profiles:** Editable profile fields (first name, last name, username, email, phone number, bio), avatar uploads via Vercel Blob, and auto-generated fallback avatars.
 - **Interface & privacy settings:** Theme switching (persisted in cookies), chat sound controls, pinned message alerts, online status visibility, and Do Not Disturb mode.
 - **Help center & AI assistant:** Searchable FAQ section and an integrated Google Gemini (`@google/genai`) assistant for answering application-related questions.
-
-&lt;!-- Screenshots: add images to docs/screenshots/ and embed them here with standard Markdown syntax, e.g.  --&gt;
 
 ## Tech Stack
 
